@@ -104,7 +104,7 @@ bool SGridEditor::GetGridEditorIsEnabled() const
 
 bool SGridEditor::GetIsPropertyVisible(const FPropertyAndParent& PropertyAndParent) const
 {
-	const UProperty& Property = PropertyAndParent.Property;
+	const FProperty& Property = PropertyAndParent.Property;
 
 	FEdModeGridEditor* GridEditorMode = GetEditorMode();
 	if (GridEditorMode != nullptr)

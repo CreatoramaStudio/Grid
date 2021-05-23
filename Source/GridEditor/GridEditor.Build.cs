@@ -7,7 +7,8 @@ namespace UnrealBuildTool.Rules
 		public GridEditor(ReadOnlyTargetRules Target) : base(Target)
         {
 			PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-			bLegacyPublicIncludePaths = false;
+			bEnforceIWYU = true;
+			bUseUnity = false;
 			ShadowVariableWarningLevel = WarningLevel.Error;
 
 			PublicIncludePaths.AddRange(
