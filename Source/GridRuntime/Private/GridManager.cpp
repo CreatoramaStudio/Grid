@@ -10,17 +10,18 @@ void UGridManager::Deinitialize()
 {
 }
 
-void UGridManager::InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass)
+void UGridManager::InitializeManager(const TSubclassOf<UGridPathFinder> PathFinderClass, const TSubclassOf<UGridInfo> InfoClass, const TSubclassOf<UGridPainter> PainterClass, float gridSize, float TraceDistance)
 {
 	GridPathFinderClass = PathFinderClass;
 	GridInfoClass = InfoClass;
 	GridPainterClass = PainterClass;
-
+	TraceTestDistance = TraceDistance;
+	GridSize = gridSize;
+	
 	SetGridPainter(GridPainterClass);
 
 	PathFinder = NewObject<UGridPathFinder>(this, GridPathFinderClass);
 	PathFinder->GridManager = this;
-
 }
 
 void UGridManager::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)

@@ -189,34 +189,33 @@ UGridManager* FEdModeGridEditor::GetGridManager()
 	{
 		if (SquareGridManager == nullptr)
 		{
-			SquareGridManager = GetEditorWorld()->SpawnActor<USquareGridManager>();
+			SquareGridManager = GetEditorWorld()->GetSubsystem<USquareGridManager>();
 			SquareGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			SquareGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
-			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass);
+			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass,SquareGridManager->GridSize,SquareGridManager->TraceTestDistance);
 			UpdateGridSettings();
 		}
 
 		return SquareGridManager;
 	}
-	else if (CurrentModeName == FGridEditorCommands::HexagonModeName)
+	
+	if (CurrentModeName == FGridEditorCommands::HexagonModeName)
 	{
 		if (HexGridManager == nullptr)
 		{
-			HexGridManager = GetEditorWorld()->SpawnActor<UHexagonGridManager>();
+			HexGridManager = GetEditorWorld()->GetSubsystem<UHexagonGridManager>();
 			HexGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			HexGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
-			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass);
+			HexGridManager->InitializeManager(HexGridManager->GridPathFinderClass,HexGridManager->GridInfoClass,HexGridManager->GridPainterClass,HexGridManager->GridSize,HexGridManager->TraceTestDistance);
 			UpdateGridSettings();
 		}
 
 		return HexGridManager;
 	}
-	else
-	{
-		return nullptr;
-	}
+	
+	return nullptr;
 }
 
 void FEdModeGridEditor::FreeGridManager()

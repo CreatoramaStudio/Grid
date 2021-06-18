@@ -26,7 +26,7 @@ public:
 	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
-	virtual void InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass);
+	virtual void InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,float gridSize = 100,float TraceDistance = 10000);
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
 	virtual void SetGridSize(float NewSize);
@@ -59,16 +59,16 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// properties
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
 	TSubclassOf<UGridPathFinder> GridPathFinderClass = UGridPathFinder::StaticClass();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
 	TSubclassOf<UGridInfo> GridInfoClass = UGridInfo::StaticClass();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
 	TSubclassOf<UGridPainter> GridPainterClass = UGridDecalPainter::StaticClass();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "GridManager")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
 	float TraceTestDistance = 10000;
 
 	void SetGridPainter(TSubclassOf<UGridPainter> PainterClass);

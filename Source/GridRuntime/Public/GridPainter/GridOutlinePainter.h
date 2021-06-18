@@ -44,5 +44,6 @@ public:
 	float ZOffset;
 
 protected:
+	UPROPERTY()
 	UGridOutlineComponent* GridOutlineComp;
 };
