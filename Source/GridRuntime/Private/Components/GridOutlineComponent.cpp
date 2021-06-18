@@ -6,7 +6,7 @@
 #include "Square/SquareGridManager.h"
 #include "Hexagon/HexagonGridManager.h"
 
-const static FName NAME_GridOutlineResourceNameForDebugging(TEXT("GridOutline"));
+const static FName GName_GridOutlineResourceNameForDebugging(TEXT("GridOutline"));
 
 class FGridOutlineSceneProxy;
 
@@ -92,7 +92,7 @@ class FGridOutlineSceneProxy : public FPrimitiveSceneProxy
 {
 public:
 	FGridOutlineSceneProxy(UGridOutlineComponent* InComponent)
-		:FPrimitiveSceneProxy(InComponent, NAME_GridOutlineResourceNameForDebugging)
+		:FPrimitiveSceneProxy(InComponent, GName_GridOutlineResourceNameForDebugging)
 	{
 	}
 
@@ -104,7 +104,7 @@ public:
 		return reinterpret_cast<size_t>(&UniquePointer);
 	}
 
-	virtual void GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, uint32 VisibilityMap, FMeshElementCollector& Collector) const override
+	virtual void GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, const uint32 VisibilityMap, FMeshElementCollector& Collector) const override
 	{
 		QUICK_SCOPE_CYCLE_COUNTER(STAT_FGridOutlineSceneProxy_GetDynamicMeshElements);
 
@@ -112,8 +112,6 @@ public:
 		{
 			if (VisibilityMap & (1 << ViewIndex))
 			{
-				const FSceneView* View = Views[ViewIndex];
-
 				FPrimitiveDrawInterface* PDI = Collector.GetPDI(ViewIndex);
 
 				DrawGridOutline(PDI);
@@ -131,10 +129,10 @@ public:
 		return Result;
 	}
 
-	FVector GetEdgeV0(FSquareEdge::EEdgeDirection Dir, const FVector& Center)
+	FVector GetEdgeV0(const FSquareEdge::EEdgeDirection Direction, const FVector& Center) const
 	{
 		const float HalfGridSize = UpdateParams.GridSize / 2.f;
-		switch (Dir)
+		switch (Direction)
 		{
 		case FSquareEdge::Left:
 			return Center + FVector(-HalfGridSize, -HalfGridSize, UpdateParams.ZOffset);
@@ -150,10 +148,10 @@ public:
 		}
 	}
 
-	FVector GetEdgeV1(FSquareEdge::EEdgeDirection Dir, const FVector& Center)
+	FVector GetEdgeV1(const FSquareEdge::EEdgeDirection Direction, const FVector& Center) const
 	{
 		const float HalfGridSize = UpdateParams.GridSize / 2.f;
-		switch (Dir)
+		switch (Direction)
 		{
 		case FSquareEdge::Left:
 			return Center + FVector(HalfGridSize, -HalfGridSize, UpdateParams.ZOffset);
@@ -169,36 +167,36 @@ public:
 		}
 	}
 
-	FVector GetEdgeV0(FHexagonEdge::EEdgeDirection Dir, const FVector& Center)
+	FVector GetEdgeV0(const FHexagonEdge::EEdgeDirection Direction, const FVector& Center) const
 	{
-		float Radian = PI / 180 * (Dir * 60 + 30);
+		float Radian = PI / 180 * (Direction * 60 + 30);
 		return Center + FVector(UpdateParams.GridSize * FMath::Cos(Radian), UpdateParams.GridSize * FMath::Sin(Radian), UpdateParams.ZOffset);
 	}
 
-	FVector GetEdgeV1(FHexagonEdge::EEdgeDirection Dir, const FVector& Center)
+	FVector GetEdgeV1(const FHexagonEdge::EEdgeDirection Direction, const FVector& Center) const
 	{
-		float Radian = PI / 180 * (((Dir + 1) % FHexagonEdge::Max) * 60 + 30);
+		float Radian = PI / 180 * (((Direction + 1) % FHexagonEdge::Max) * 60 + 30);
 		return Center + FVector(UpdateParams.GridSize * FMath::Cos(Radian), UpdateParams.GridSize * FMath::Sin(Radian), UpdateParams.ZOffset);
 	}
 
-	void GetCounterEdge(FSquareEdge::EEdgeDirection InDir, const FIntVector& InCoord, FSquareEdge::EEdgeDirection& CounterDir, FIntVector& CounterCoord)
+	static void GetCounterEdge(const FSquareEdge::EEdgeDirection InDirection, const FIntVector& InCoord, FSquareEdge::EEdgeDirection& CounterDirection, FIntVector& CounterCoord)
 	{
 		const FSquareEdge::EEdgeDirection CounterDirections[] = { FSquareEdge::Right, FSquareEdge::Left, FSquareEdge::Bottom, FSquareEdge::Top };
 		const FIntVector CounterCoordDelta[] = { FIntVector(0, -1, 0), FIntVector(0, 1, 0), FIntVector(1, 0, 0), FIntVector(-1, 0, 0) };
 
-		CounterDir = CounterDirections[InDir];
-		CounterCoord = InCoord + CounterCoordDelta[InDir];
+		CounterDirection = CounterDirections[InDirection];
+		CounterCoord = InCoord + CounterCoordDelta[InDirection];
 	}
 
-	void GetCounterEdge(FHexagonEdge::EEdgeDirection InDir, const FIntVector& InCoord, FHexagonEdge::EEdgeDirection& CounterDir, FIntVector& CounterCoord)
+	static void GetCounterEdge(const FHexagonEdge::EEdgeDirection InDirection, const FIntVector& InCoord, FHexagonEdge::EEdgeDirection& CounterDir, FIntVector& CounterCoord)
 	{
 		const FHexagonEdge::EEdgeDirection CounterDirections[] = { FHexagonEdge::RightBottom, FHexagonEdge::LeftBottom, FHexagonEdge::Left
 																,FHexagonEdge::LeftTop, FHexagonEdge::RightTop, FHexagonEdge::Right };
 		const FIntVector CounterCoordDelta[] = { FIntVector(0, -1, 1), FIntVector(-1, 0, 1), FIntVector(-1, 1, 0)
 												,FIntVector(0, 1, -1), FIntVector(1, 0, -1), FIntVector(1, -1, 0) };
 
-		CounterDir = CounterDirections[InDir];
-		CounterCoord = InCoord + CounterCoordDelta[InDir];
+		CounterDir = CounterDirections[InDirection];
+		CounterCoord = InCoord + CounterCoordDelta[InDirection];
 	}
 
 	template <class T>
@@ -287,11 +285,10 @@ public:
 		if (OutlineEdges.Num() == 0)
 			return;
 
-		FEdge Edge;
 		for (int i = 0; i < OutlineEdges.Num(); ++i)
 		{
 			const T& OutlineEdge = OutlineEdges[i];
-			Edge = FEdge(GetEdgeV0(OutlineEdge.Direction, OutlineEdge.GridCenter), GetEdgeV1(OutlineEdge.Direction, OutlineEdge.GridCenter));
+			FEdge Edge = FEdge(GetEdgeV0(OutlineEdge.Direction, OutlineEdge.GridCenter), GetEdgeV1(OutlineEdge.Direction, OutlineEdge.GridCenter));
 
 			int j;
 			for (j = 0; j < EdgeGroups.Num(); ++j)
@@ -341,9 +338,9 @@ public:
 		OutlineEdges.Sort([&](const T& L, const T& R)
 		{
 			int32 LIdx = -1, RIdx = -1;
-			bool LSucc = UpdateParams.ColorPriorities.Find(L.Color, LIdx);
-			bool RSucc = UpdateParams.ColorPriorities.Find(R.Color, RIdx);
-			if (!LSucc || !RSucc)
+			const bool bLeftSuccess = UpdateParams.ColorPriorities.Find(L.Color, LIdx);
+			const bool bRightSuccess = UpdateParams.ColorPriorities.Find(R.Color, RIdx);
+			if (!bLeftSuccess || !bRightSuccess)
 				PrintErrorGridRuntime("FGridOutlinePrimitiveSceneProxy::CollectGridOutline Hexagon grid sort failed, can't find grid color in UpdateParams.ColorPriorities");
 			return LIdx < RIdx;
 		});
@@ -393,8 +390,8 @@ private:
 //////////////////////////////////////////////////////////////////////////
 UGridOutlineComponent::UGridOutlineComponent()
 {
-	SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SetCollisionResponseToAllChannels(ECR_Ignore);
+	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UPrimitiveComponent::SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
 UGridOutlineComponent::~UGridOutlineComponent()

@@ -10,8 +10,8 @@ class GRIDRUNTIME_API USquarePathFinder : public UGridPathFinder
 	GENERATED_BODY()
 
 public:
-	USquarePathFinder() {};
-	virtual ~USquarePathFinder() {};
+	USquarePathFinder();
+	virtual ~USquarePathFinder() override;
 
 	virtual int32 GetCost_Implementation(UGrid* From, UGrid* To) override;
 };

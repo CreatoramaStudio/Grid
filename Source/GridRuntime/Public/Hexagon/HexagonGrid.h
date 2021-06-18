@@ -14,7 +14,7 @@ class GRIDRUNTIME_API UHexagonGrid : public UGrid
 	
 public:
 	UHexagonGrid();
-	virtual ~UHexagonGrid();
+	virtual ~UHexagonGrid() override;
 
 	virtual FVector GetCenter() const override;
 

@@ -37,7 +37,7 @@ public:
 		return Result;
 	}
 
-	virtual void GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, uint32 VisibilityMap, FMeshElementCollector& Collector) const override
+	virtual void GetDynamicMeshElements(const TArray<const FSceneView*>& Views, const FSceneViewFamily& ViewFamily, const uint32 VisibilityMap, FMeshElementCollector& Collector) const override
 	{
 		QUICK_SCOPE_CYCLE_COUNTER(STAT_FLineSceneProxy_GetDynamicMeshElements);
 
@@ -45,8 +45,6 @@ public:
 		{
 			if (VisibilityMap & (1 << ViewIndex))
 			{
-				const FSceneView* View = Views[ViewIndex];
-
 				FPrimitiveDrawInterface* PDI = Collector.GetPDI(ViewIndex);
 
 				for (int i = 1; i < UpdateParams.Points.Num(); ++i)
@@ -79,8 +77,8 @@ ULineComponent::ULineComponent()
 	LineColor = FLinearColor::White;
 	LineThickness = 5.f;
 
-	SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	SetCollisionResponseToAllChannels(ECR_Ignore);
+	UPrimitiveComponent::SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UPrimitiveComponent::SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
 ULineComponent::~ULineComponent()

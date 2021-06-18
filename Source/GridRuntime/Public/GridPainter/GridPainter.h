@@ -18,7 +18,7 @@ class GRIDRUNTIME_API UGridPainter : public UObject
 	
 public:
 	UGridPainter();
-	virtual ~UGridPainter();
+	virtual ~UGridPainter() override;
 
 	virtual void PostInitPainter();
 

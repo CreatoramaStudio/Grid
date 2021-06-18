@@ -17,7 +17,7 @@ class GRIDRUNTIME_API UGridInfo : public UObject
 	
 public:
 	UGridInfo();
-	virtual ~UGridInfo();	
+	virtual ~UGridInfo() override;	
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridInfo")
 	void Clear();
@@ -35,5 +35,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridInfo")
 	FGameplayTagContainer GameplayTags;
 
+	UPROPERTY()
 	UGrid* ParentGrid;
 };

@@ -16,7 +16,7 @@ class GRIDRUNTIME_API UDefaultGridNavigationAgent : public UGridNavigationAgent
 	
 public:
 	UDefaultGridNavigationAgent();
-	virtual ~UDefaultGridNavigationAgent();
+	virtual ~UDefaultGridNavigationAgent() override;
 
 	virtual bool Check_Implementation(APawn* Pawn, UGrid* From, UGrid* To) override;
 
@@ -29,7 +29,7 @@ public:
 
 protected:
 	UFUNCTION()
-	virtual void OnAIControllerMoveCompeleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
+	virtual void OnAIControllerMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
 
 	UPROPERTY()
 	APawn* CurrentPawn;

@@ -14,7 +14,7 @@ class GRIDRUNTIME_API USquareGrid : public UGrid
 
 public:
 	USquareGrid();
-	virtual ~USquareGrid();
+	virtual ~USquareGrid() override;
 
 	virtual FVector GetCenter() const override;
 

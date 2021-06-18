@@ -7,7 +7,7 @@ class FAStar
 {
 public:
 	FAStar(UGrid* _Start, UGrid* _Goal, UGridPathFinder* _PathFinder, bool _Reversed = false)
-		: Succ(false), Reversed(_Reversed), Start(_Start), Goal(_Goal), PathFinder(_PathFinder)
+		: bSuccess(false), Reversed(_Reversed), Start(_Start), Goal(_Goal), PathFinder(_PathFinder)
 	{
 		Comparer.FCost = &FCost;
 
@@ -28,7 +28,7 @@ public:
 
 		if (Current->Equal(Goal))
 		{
-			Succ = true;
+			bSuccess = true;
 			return true;
 		}
 
@@ -88,14 +88,14 @@ public:
 		}
 	}
 
-	bool Succ;
+	bool bSuccess;
 private:
 	struct FComparer
 	{
 		bool operator()(const UGrid& L, const UGrid& R) const
 		{
-			int32 LFCost = FCost->Contains(&L) ? FCost->FindChecked(&L) : TNumericLimits<int32>::Max();
-			int32 RFCost = FCost->Contains(&R) ? FCost->FindChecked(&R) : TNumericLimits<int32>::Max();
+			const int32 LFCost = FCost->Contains(&L) ? FCost->FindChecked(&L) : TNumericLimits<int32>::Max();
+			const int32 RFCost = FCost->Contains(&R) ? FCost->FindChecked(&R) : TNumericLimits<int32>::Max();
 			return LFCost < RFCost;
 		}
 		TMap<UGrid*, int32>* FCost;
@@ -118,7 +118,7 @@ class FBidirectionalAStar
 {
 public:
 	FBidirectionalAStar(UGrid* _Start, UGrid* _Goal, UGridPathFinder* _PathFinder)
-		:Succ(false), IntersectGrid(nullptr), ForwardAStar(_Start, _Goal, _PathFinder), BackwardAStar(_Goal, _Start, _PathFinder, true)
+		:bSuccess(false), IntersectGrid(nullptr), ForwardAStar(_Start, _Goal, _PathFinder), BackwardAStar(_Goal, _Start, _PathFinder, true)
 	{}
 
 	bool Step()
@@ -126,7 +126,7 @@ public:
 		if (!ForwardAStar.Step())
 			return false;
 
-		if (ForwardAStar.Succ)
+		if (ForwardAStar.bSuccess)
 		{
 			IntersectGrid = ForwardAStar.Goal;
 		}
@@ -135,7 +135,7 @@ public:
 			if (!BackwardAStar.Step())
 				return false;
 
-			if (BackwardAStar.Succ)
+			if (BackwardAStar.bSuccess)
 				IntersectGrid = BackwardAStar.Start;
 		}
 
@@ -144,7 +144,7 @@ public:
 
 		if (IntersectGrid != nullptr)
 		{
-			Succ = true;
+			bSuccess = true;
 		}
 		return true;
 	}
@@ -156,7 +156,7 @@ public:
 		BackwardAStar.CollectPath(IntersectGrid, Result);
 	}
 
-	bool Succ;
+	bool bSuccess;
 private:
 	UGrid * IntersectGrid;
 	FAStar ForwardAStar;
@@ -168,7 +168,7 @@ uint64 UGridUtilities::GetUniqueIdByCoordinate(const FIntVector& Coord)
 	return ((uint64)Coord.Z << 44) + ((uint64)Coord.Y << 22) + (uint64)Coord.X;
 }
 
-FVector UGridUtilities::CalcGridDecalSize(EGridType GridType, float GridSize)
+FVector UGridUtilities::CalcGridDecalSize(const EGridType GridType, const float GridSize)
 {
 	switch (GridType)
 	{
@@ -198,7 +198,7 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathF
 {
 	Result.Reset();
 
-	bool Succ = false;
+	bool bSuccess = false;
 
 	PathFinder->Request = Request;
 
@@ -208,12 +208,12 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathF
 	FBidirectionalAStar BidirectionalAStar(Start, Goal, PathFinder);
 
 	int32 Step = 0;
-	while (!Succ)
+	while (!bSuccess)
 	{
 		if (!BidirectionalAStar.Step())
 			break;
 
-		Succ = BidirectionalAStar.Succ;
+		bSuccess = BidirectionalAStar.bSuccess;
 
 		if (++Step > Request.MaxSearchStep)
 		{
@@ -222,7 +222,7 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathF
 		}
 	}
 
-	if (Succ)
+	if (bSuccess)
 	{
 		BidirectionalAStar.CollectPath(Result);
 
@@ -246,11 +246,11 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathF
 			if (i < Result.Num())
 			{
 				Result.RemoveAt(i, Result.Num() - i);
-				Succ = false;
+				bSuccess = false;
 			}
 		}
 	}
-	return Succ;
+	return bSuccess;
 }
 
 bool UGridUtilities::GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathFinder* PathFinder, TArray<UGrid*>& Result)
@@ -336,12 +336,12 @@ bool UGridUtilities::NotEqual_GridGrid(const UGrid* A, const UGrid* B)
 	return !A->Equal(B);
 }
 
-bool UGridUtilities::GridTraceSingleForObjects(const UGrid* Grid, float TraceDistance, const TArray<TEnumAsByte<EObjectTypeQuery> > & ObjectTypes, bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, bool bIgnoreSelf, FLinearColor TraceColor, FLinearColor TraceHitColor, float DrawTime)
+bool UGridUtilities::GridTraceSingleForObjects(const UGrid* Grid, const float TraceDistance, const TArray<TEnumAsByte<EObjectTypeQuery> > & ObjectTypes, const bool bTraceComplex, const TArray<AActor*>& ActorsToIgnore, const EDrawDebugTrace::Type DrawDebugType, FHitResult& OutHit, const bool bIgnoreSelf, const FLinearColor TraceColor, const FLinearColor TraceHitColor, const float DrawTime)
 {
-	FVector Start = Grid->GetCenter() + FVector(0.f, 0.f, TraceDistance / 2.f);
-	FVector End = Grid->GetCenter() - FVector(0.f, 0.f, TraceDistance / 2.f);
+	const FVector Start = Grid->GetCenter() + FVector(0.f, 0.f, TraceDistance / 2.f);
+	const FVector End = Grid->GetCenter() - FVector(0.f, 0.f, TraceDistance / 2.f);
 
-	return UKismetSystemLibrary::LineTraceSingleForObjects((UObject*)Grid->GridManager->GetWorld(), Start, End, ObjectTypes
+	return UKismetSystemLibrary::LineTraceSingleForObjects(Grid->GridManager->GetWorld(), Start, End, ObjectTypes
 		, bTraceComplex, ActorsToIgnore, DrawDebugType, OutHit
 		, bIgnoreSelf, TraceColor, TraceHitColor, DrawTime);
 }

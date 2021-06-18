@@ -14,9 +14,9 @@ class GRIDRUNTIME_API UGridDecalPainter : public UGridPainter
 	
 public:
 	UGridDecalPainter();
-	virtual ~UGridDecalPainter();
+	virtual ~UGridDecalPainter() override;
 	
-	virtual void TickImpl_Implementation(float DeltaTime);
+	virtual void TickImpl_Implementation(float DeltaTime) override;
 
 	virtual void UpdateGridState_Implementation(UGrid* Grid) override;
 

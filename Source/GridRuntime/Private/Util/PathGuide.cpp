@@ -1,4 +1,5 @@
 #include "Util/PathGuide.h"
+#include "Components/DecalComponent.h"
 #include "Util/GridUtilities.h"
 
 APathGuide::APathGuide()
@@ -38,11 +39,11 @@ void APathGuide::SetPath(const TArray<UGrid*>& Path)
 {
 	TArray<FVector> Points;
 
-	FVector PrePoint, CurrPoint, TempPoint, Dir;
+	FVector PrePoint;
 	for (int i = 0; i < Path.Num(); ++i)
 	{
 		const UGrid* Grid = Path[i];
-		CurrPoint = Grid->GetCenter() + FVector(0.f, 0.f, ZOffset);
+		FVector CurrPoint = Grid->GetCenter() + FVector(0.f, 0.f, ZOffset);
 
 		if (i == 0)
 		{
@@ -59,16 +60,16 @@ void APathGuide::SetPath(const TArray<UGrid*>& Path)
 			}
 			else
 			{
-				TempPoint = CurrPoint;
+				FVector TempPoint = CurrPoint;
 				TempPoint.Z = PrePoint.Z;
-				Dir = TempPoint - PrePoint;
-				Dir.Normalize();
+				FVector Direction = TempPoint - PrePoint;
+				Direction.Normalize();
 
 				int32 Distance = FVector::Dist(PrePoint, TempPoint);
 
 				Distance = PrePoint.Z < CurrPoint.Z ? Distance / 2 - ZOffset : Distance / 2 + ZOffset;
 
-				TempPoint = PrePoint + Distance * Dir;
+				TempPoint = PrePoint + Distance * Direction;
 				Points.Add(TempPoint);
 
 				TempPoint.Z = CurrPoint.Z;
@@ -117,7 +118,7 @@ void APathGuide::Clear()
 	SetPath(TArray<UGrid*>());
 }
 
-void APathGuide::UpdateDecal(const TArray<FVector>& Points)
+void APathGuide::UpdateDecal(const TArray<FVector>& Points) const
 {
 	if (Points.Num() == 0)
 	{

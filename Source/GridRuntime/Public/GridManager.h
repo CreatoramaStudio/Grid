@@ -57,6 +57,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
 	UGridPathFinder* GetPathFinder() const;
 
+	UGridPainter* GetGridPainter() const;
+
+	UFUNCTION(BlueprintCallable, Category = "GridManager")
+	bool IsInitialized() const;
+
+	void LineTraceTest(const FVector& Center, TArray<FHitResult>& Results) const;
+
 	//////////////////////////////////////////////////////////////////////////
 	// properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
@@ -69,17 +76,16 @@ public:
 	TSubclassOf<UGridPainter> GridPainterClass = UGridDecalPainter::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
-	float TraceTestDistance = 10000;
+	float TraceTestDistance = 10000;	
 
 	void SetGridPainter(TSubclassOf<UGridPainter> PainterClass);
-
-	UGridPainter* GetGridPainter() const;
-
-	void LineTraceTest(const FVector& Center, TArray<FHitResult>& Results) const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
 	float GridSize = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
+	bool bInitialized = false;
 
 	UPROPERTY()
 	UGridPainter* GridPainter;

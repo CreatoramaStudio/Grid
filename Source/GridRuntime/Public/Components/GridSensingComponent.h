@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/ObjectMacros.h"
 #include "Engine/EngineTypes.h"
 #include "Components/ActorComponent.h"
 #include "GameFramework/Pawn.h"
@@ -9,6 +8,7 @@
 
 class UGridManager;
 class AController;
+class UGrid;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSeePawnEvent, APawn*, Pawn);
 
@@ -23,9 +23,9 @@ class GRIDRUNTIME_API UGridSensingComponent : public UActorComponent
 	GENERATED_BODY()
 public:
 	UGridSensingComponent();
-	virtual ~UGridSensingComponent();
+	virtual ~UGridSensingComponent() override;
 
-	void InitializeComponent() override;
+	virtual void InitializeComponent() override;
 
 	/** interval == 0 disables sensing  */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSensingComponent", meta = (UIMin = "0.0"))

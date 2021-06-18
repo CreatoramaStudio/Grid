@@ -48,7 +48,7 @@ class GRIDRUNTIME_API UGridPathFinder : public UObject
 
 public:
 	UGridPathFinder();
-	virtual ~UGridPathFinder();
+	virtual ~UGridPathFinder() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	UGrid* GetStart() const;

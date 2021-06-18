@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PrimitiveSceneProxy.h"
 #include "Components/PrimitiveComponent.h"
 #include "GridOutlineComponent.generated.h"
 
@@ -15,7 +14,7 @@ class GRIDRUNTIME_API UGridOutlineComponent : public UPrimitiveComponent
 	
 public:
 	UGridOutlineComponent();
-	virtual ~UGridOutlineComponent();
+	virtual ~UGridOutlineComponent() override;
 
 	virtual FPrimitiveSceneProxy* CreateSceneProxy() override;
 

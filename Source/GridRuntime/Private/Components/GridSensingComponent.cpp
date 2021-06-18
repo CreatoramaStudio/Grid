@@ -6,7 +6,6 @@
 #include "GridManager.h"
 #include "Square/SquareGridManager.h"
 #include "TimerManager.h"
-#include "GridInterface.h"
 
 UGridSensingComponent::UGridSensingComponent()
 {
@@ -131,7 +130,7 @@ void UGridSensingComponent::UpdateSensing()
 {
 	AActor* Owner = GetOwner();
 
-	TArray<APawn*> OldSenseResult = SensedPawns;
+	const TArray<APawn*> OldSenseResult = SensedPawns;
 	SensedPawns.Reset();
 
 	TArray<UGrid*> SensingGrids;
@@ -183,9 +182,13 @@ AController* UGridSensingComponent::GetSensorController() const
 
 UGridManager* UGridSensingComponent::GetGridManager() const
 {
-	AActor* Owner = GetOwner();
-	if (Owner->GetClass()->ImplementsInterface(UGridPawnInterface::StaticClass()))
-		return IGridPawnInterface::Execute_GetGridManager(Owner);
+	for (auto GridManager : GetWorld()->GetSubsystemArray<UGridManager>())
+	{
+		if (GridManager && GridManager->IsInitialized())
+		{
+			return GridManager;
+		}
+	}
 	return nullptr;
 }
 

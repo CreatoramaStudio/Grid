@@ -4,6 +4,8 @@
 #include "UObject/NoExportTypes.h"
 #include "GridNavigationAgent.generated.h"
 
+class UGrid;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGridNavAgentEvent, APawn*, Pawn, bool, Succ);
 
 /**
@@ -17,7 +19,7 @@ class GRIDRUNTIME_API UGridNavigationAgent : public UObject
 	
 public:
 	UGridNavigationAgent();
-	virtual ~UGridNavigationAgent();
+	virtual ~UGridNavigationAgent() override;
 
 	/** check if this agent can process this move */
 	UFUNCTION(BlueprintNativeEvent, Category = "GridNavigationAgent")

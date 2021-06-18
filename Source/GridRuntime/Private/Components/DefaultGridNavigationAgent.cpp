@@ -19,7 +19,7 @@ bool UDefaultGridNavigationAgent::Check_Implementation(APawn* Pawn, UGrid* From,
 		return false;
 
 	UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(Pawn->GetWorld());
-	UNavigationPath* Path = NavSys->FindPathToLocationSynchronously((UObject*)Pawn->GetWorld(), From->GetCenter(), To->GetCenter(), Pawn);
+	UNavigationPath* Path = NavSys->FindPathToLocationSynchronously(Pawn->GetWorld(), From->GetCenter(), To->GetCenter(), Pawn);
 
 	if (Path == nullptr || !Path->IsValid() || Path->IsPartial())
 		return false;
@@ -39,19 +39,19 @@ bool UDefaultGridNavigationAgent::RequestMove_Implementation(APawn* Pawn, UGrid*
 		return false;
 
 	FScriptDelegate Delegate;
-	Delegate.BindUFunction(this, "OnAIControllerMoveCompeleted");
+	Delegate.BindUFunction(this, "OnAIControllerMoveCompleted");
 	CurrentController->ReceiveMoveCompleted.AddUnique(Delegate);
 
 	const EPathFollowingRequestResult::Type Result = CurrentController->MoveToLocation(To->GetCenter(), AcceptanceRadius, false);
 
-	bool bSucc = false;
+	bool bSuccess = false;
 
 	switch (Result)
 	{
 	case EPathFollowingRequestResult::Type::AlreadyAtGoal:
 	case EPathFollowingRequestResult::Type::RequestSuccessful:
 		{
-			bSucc = true;
+			bSuccess = true;
 			break;
 		}
 	case EPathFollowingRequestResult::Failed:
@@ -64,7 +64,7 @@ bool UDefaultGridNavigationAgent::RequestMove_Implementation(APawn* Pawn, UGrid*
 		break;
 	}
 
-	return bSucc;
+	return bSuccess;
 }
 
 void UDefaultGridNavigationAgent::StopMove_Implementation()
@@ -79,20 +79,20 @@ void UDefaultGridNavigationAgent::StopMove_Implementation()
 	}
 }
 
-void UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
+void UDefaultGridNavigationAgent::OnAIControllerMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
-	bool Succ = false;
+	bool bSuccess = false;
 
 	switch (Result)
 	{
 	case EPathFollowingResult::Success:
 		{
-			Succ = true;
+			bSuccess = true;
 			break;
 		}
 	default:
 		{
-			PrintErrorGridRuntime("UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted failed, Result: " +  Result);
+			PrintErrorGridRuntime("UDefaultGridNavigationAgent::OnAIControllerMoveCompleted failed, Result: " +  Result);
 		}
 		break;
 	}
@@ -103,5 +103,5 @@ void UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted(FAIRequestID Requ
 	CurrentPawn = nullptr;
 	CurrentController = nullptr;
 
-	OnMoveCompleted.Broadcast(TempPawn, Succ);
+	OnMoveCompleted.Broadcast(TempPawn, bSuccess);
 }

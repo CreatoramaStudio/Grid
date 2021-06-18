@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/PrimitiveComponent.h"
-#include "Components/DecalComponent.h"
 #include "LineComponent.generated.h"
 
 /**
@@ -17,7 +16,7 @@ class GRIDRUNTIME_API ULineComponent : public UPrimitiveComponent
 	
 public:
 	ULineComponent();
-	virtual ~ULineComponent();
+	virtual ~ULineComponent() override;
 
 	virtual FPrimitiveSceneProxy* CreateSceneProxy() override;
 

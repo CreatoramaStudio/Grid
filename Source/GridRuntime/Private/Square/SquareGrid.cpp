@@ -41,7 +41,7 @@ int USquareGrid::GetDistance(const UGrid* Dest) const
 	return FMath::Abs(Coord.X - Dest->Coord.X) + FMath::Abs(Coord.Y - Dest->Coord.Y);
 }
 
-void USquareGrid::GetSquareNeighbors(TArray<UGrid*>& Grids, bool bDiagonal /*= false*/)
+void USquareGrid::GetSquareNeighbors(TArray<UGrid*>& Grids, const bool bDiagonal /*= false*/)
 {
 	const FIntVector Directions[] = { FIntVector(1, 0, 0), FIntVector(-1, 0, 0), FIntVector(0, 1, 0), FIntVector(0, -1, 0) };
 

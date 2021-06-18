@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "Grid.h"
 #include "GridPathfindingParams.h"
-#include "UObject/NoExportTypes.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GridUtilities.generated.h"
 

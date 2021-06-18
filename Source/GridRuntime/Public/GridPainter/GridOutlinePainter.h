@@ -15,7 +15,7 @@ class GRIDRUNTIME_API UGridOutlinePainter : public UGridPainter
 	
 public:
 	UGridOutlinePainter();
-	virtual ~UGridOutlinePainter();
+	virtual ~UGridOutlinePainter() override;
 
 	virtual void SetGridManager(UGridManager* NewGridManager) override;
 	

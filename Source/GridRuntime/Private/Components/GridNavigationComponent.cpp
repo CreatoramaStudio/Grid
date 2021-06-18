@@ -54,7 +54,7 @@ void UGridNavigationComponent::BeginPlay()
 	}
 }
 
-bool UGridNavigationComponent::RequestMove(UGrid* DestGrid, UGridPathFinder* PathFinder)
+bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 {
 	if (OwnerPawn == nullptr)
 	{
@@ -78,6 +78,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid, UGridPathFinder* Pat
 
 	if (!ensure(GridManager != nullptr))
 	{
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, GridManager is null");
 		return false;
 	}
 
@@ -88,11 +89,15 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid, UGridPathFinder* Pat
 	Request.Destination = DestGrid;
 	Request.Start = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 
-	if (PathFinder == nullptr)
+	UGridPathFinder* PathFinder = GridManager->GetPathFinder();
+	
+	if (!PathFinder)
 	{
-		PathFinder = GridManager->GetPathFinder();
-		PathFinder->Reset();
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, PathFinder is null");
+		return false;
 	}
+	
+	PathFinder->Reset();
 
 	if (!UGridUtilities::FindPath(Request, PathFinder, CurrentFollowingPath))
 	{
@@ -212,9 +217,9 @@ UGridNavigationAgent* UGridNavigationComponent::FindAgent(UGrid* Start, UGrid* G
 	return Agent;
 }
 
-void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool Succ)
+void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool bSuccess)
 {
-	if (Succ)
+	if (bSuccess)
 	{
 		if (FollowingPathIndex < CurrentFollowingPath.Num() - 1)
 		{

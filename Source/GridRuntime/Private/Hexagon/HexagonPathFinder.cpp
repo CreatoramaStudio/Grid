@@ -1,4 +1,5 @@
 #include "Hexagon/HexagonPathFinder.h"
+#include "Grid.h"
 
 UHexagonPathFinder::UHexagonPathFinder()
 {

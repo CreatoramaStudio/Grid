@@ -1,7 +1,6 @@
 #include "Hexagon/HexagonGridManager.h"
 #include "GridRuntimeLog.h"
 #include "GridPainter/GridDecalPainter.h"
-#include "Hexagon/HexagonPathFinder.h"
 #include "Util/GridUtilities.h"
 
 void UHexagonGridManager::Initialize(FSubsystemCollectionBase& Collection)
@@ -14,24 +13,23 @@ void UHexagonGridManager::Deinitialize()
 	Super::Deinitialize();	
 }
 
-void UHexagonGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
+void UHexagonGridManager::GetGridsByRange(UGrid* Center, const int Range, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
 	if (Center == nullptr)
 		return;
 
-	TArray<UGrid*> TmpGrids;
-
-	for (int dx = -Range; dx <= Range; ++dx)
+	for (int DX = -Range; DX <= Range; ++DX)
 	{
-		int Lowwer = FMath::Max(-Range, -dx - Range);
-		int Upper = FMath::Min(Range, -dx + Range);
-		for (int dy = Lowwer; dy <= Upper; ++dy)
+		const int Lower = FMath::Max(-Range, -DX - Range);
+		const int Upper = FMath::Min(Range, -DX + Range);
+		for (int Dy = Lower; Dy <= Upper; ++Dy)
 		{
-			int dz = -dx - dy;
+			TArray<UGrid*> TmpGrids;
+			const int Dz = -DX - Dy;
 			
-			FIntVector Coord(Center->Coord.X + dx, Center->Coord.Y + dy, Center->Coord.Z + dz);
+			FIntVector Coord(Center->Coord.X + DX, Center->Coord.Y + Dy, Center->Coord.Z + Dz);
 
 			GetGridsByCoord(Coord, TmpGrids);
 
@@ -49,12 +47,12 @@ void UHexagonGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Gri
 {
 	Grids.Reset();
 
-	PrintErrorGridRuntime("AHexagonGridManager::GetGridsByBound not implemnt yet");
+	PrintErrorGridRuntime("AHexagonGridManager::GetGridsByBound not implement yet");
 }
 
 
 
-void UHexagonGridManager::SetGridSize(float NewSize)
+void UHexagonGridManager::SetGridSize(const float NewSize)
 {
 	this->GridSize = NewSize;
 
@@ -106,7 +104,7 @@ void UHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray
 
 	check(Coord.X + Coord.Y + Coord.Z == 0);
 
-	uint64 GridId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
+	const uint64 GridId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
 
 	FHexagonGridArray GridArray;
 	if (GridsPool.Contains(GridId))
@@ -122,21 +120,21 @@ void UHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray
 	}
 }
 
-FIntVector UHexagonGridManager::CubeRound(float _X, float _Y, float _Z)
+FIntVector UHexagonGridManager::CubeRound(const float _X, const float _Y, const float _Z)
 {
 	int X = FPlatformMath::RoundToInt(_X);
 	int Y = FPlatformMath::RoundToInt(_Y);
 	int Z = FPlatformMath::RoundToInt(_Z);
 
-	int dx = FMath::Abs(X - _X);
-	int dy = FMath::Abs(Y - _Y);
-	int dz = FMath::Abs(Z - _Z);
+	const int DX = FMath::Abs(X - _X);
+	const int Dy = FMath::Abs(Y - _Y);
+	const int Dz = FMath::Abs(Z - _Z);
 
-	if (dx > dy && dx > dz)
+	if (DX > Dy && DX > Dz)
 	{
 		X = -Y - Z;
 	}
-	else if (dy > dz)
+	else if (Dy > Dz)
 	{
 		Y = -X - Z;
 	}
@@ -155,11 +153,11 @@ UGrid* UHexagonGridManager::GetGridByPosition(const FVector& Position)
 
 UHexagonGrid* UHexagonGridManager::GetHexagonGridByPosition(const FVector& Position)
 {
-	float X = (Position.X * FMath::Sqrt(3) / 3 - Position.Y / 3) / GridSize;
-	float Z = Position.Y * 2 / 3 / GridSize;
-	float Y = -X - Z;
+	const float X = (Position.X * FMath::Sqrt(3) / 3 - Position.Y / 3) / GridSize;
+	const float Z = Position.Y * 2 / 3 / GridSize;
+	const float Y = -X - Z;
 
-	FIntVector Coord = CubeRound(X, Y, Z);
+	const FIntVector Coord = CubeRound(X, Y, Z);
 
 	TArray<UHexagonGrid*> Grids;
 	GetHexagonGridsByCoord(Coord, Grids);
@@ -171,7 +169,7 @@ UHexagonGrid* UHexagonGridManager::GetHexagonGridByPosition(const FVector& Posit
 	{
 		UHexagonGrid* Grid = Grids[i];
 
-		int Distance = FMath::Abs(Grid->Height - Position.Z);
+		const int Distance = FMath::Abs(Grid->Height - Position.Z);
 		if (Distance < MinDistance)
 		{
 			MinDistance = Distance;
@@ -186,7 +184,7 @@ void UHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray
 {
 	TArray<FHitResult> HitResults;
 
-	FVector Center(GridSize * FMath::Sqrt(3.f) * (Coord.X + Coord.Z / 2.f), GridSize * 3.f / 2.f * Coord.Z, 0.f);
+	const FVector Center(GridSize * FMath::Sqrt(3.f) * (Coord.X + Coord.Z / 2.f), GridSize * 3.f / 2.f * Coord.Z, 0.f);
 
 	LineTraceTest(Center, HitResults);
 
@@ -195,10 +193,10 @@ void UHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray
 		if (i != 0)
 		{
 			// if this static mesh is too close to previous one, it has been blocked, skip this result
-			FVector Oringin, Extent;
-			HitResults[i - 1].Actor->GetActorBounds(true, Oringin, Extent);
+			FVector Origin, Extent;
+			HitResults[i - 1].Actor->GetActorBounds(true, Origin, Extent);
 
-			FBox Bound = FBox::BuildAABB(Oringin, Extent);
+			FBox Bound = FBox::BuildAABB(Origin, Extent);
 
 			FVector TestPoint = HitResults[i].ImpactPoint;
 

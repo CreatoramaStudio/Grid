@@ -16,7 +16,7 @@ class GRIDRUNTIME_API APathGuide : public AActor
 	
 public:	
 	APathGuide();
-	virtual ~APathGuide();
+	virtual ~APathGuide() override;
 
 	UFUNCTION(BlueprintCallable, Category = "PathGuide")
 	virtual void SetPath(const TArray<UGrid*>& Path);
@@ -24,11 +24,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "PathGuide")
 	virtual void SetCustomPoints(const TArray<FVector>& Points);
 
-	/** set materical to null will disable start decal */
+	/** set material to null will disable start decal */
 	UFUNCTION(BlueprintCallable, Category = "PathGuide")
 	virtual void SetStartDecalMaterial(UMaterialInterface* NewMaterial);
 
-	/** set materical to null will disable desitination decal */
+	/** set material to null will disable destination decal */
 	UFUNCTION(BlueprintCallable, Category = "PathGuide")
 	virtual void SetDestinationDecalMaterial(UMaterialInterface* NewMaterial);
 
@@ -67,7 +67,7 @@ public:
 	float DecalSizeScale;
 
 protected:
-	void UpdateDecal(const TArray<FVector>& Points);
+	void UpdateDecal(const TArray<FVector>& Points) const;
 
 protected:
 	UPROPERTY()

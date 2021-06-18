@@ -25,7 +25,7 @@ class GRIDRUNTIME_API UGridNavigationComponent : public UActorComponent
 
 public:	
 	UGridNavigationComponent();
-	virtual ~UGridNavigationComponent();
+	virtual ~UGridNavigationComponent() override;
 
 	virtual void BeginPlay() override;
 
@@ -34,7 +34,7 @@ public:
 		@note if PathFinder == null, GridManager's default PathFinder will be used
 	*/
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
-	virtual bool RequestMove(UGrid* DestGrid, UGridPathFinder* PathFinder = nullptr);
+	virtual bool RequestMove(UGrid* DestGrid);
 
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
 	virtual void StopMove();
@@ -50,7 +50,7 @@ public:
 
 	/** if you implement a new GridNavigationAgent, add that class to this Array */
 	UPROPERTY(EditDefaultsOnly, Category = "Grid")
-	TArray<TSubclassOf<UGridNavigationAgent> > AgentClasses;
+	TArray<TSubclassOf<UGridNavigationAgent>> AgentClasses;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridNavigationComponent")
 	EGridNavMode NavMode;
@@ -63,7 +63,7 @@ protected:
 	UGridNavigationAgent* FindAgent(UGrid* Start, UGrid* Goal);
 
 	UFUNCTION()
-	virtual void OnMoveCompleted(APawn* Pawn, bool Succ);
+	virtual void OnMoveCompleted(APawn* Pawn, bool bSuccess);
 
 protected:
 	UPROPERTY()
@@ -82,5 +82,6 @@ protected:
 	UPROPERTY()
 	TArray<UGridNavigationAgent*> Agents;
 
+	UPROPERTY()
 	UGridNavigationAgent* CurrentAgent;
 };

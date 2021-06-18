@@ -13,13 +13,25 @@ struct FSquareGridArray
 	UPROPERTY()
 	TArray<USquareGrid*> Grids;
 
-	void Add(USquareGrid* Grid) { Grids.Add(Grid); }
+	void Add(USquareGrid* Grid)
+	{
+		Grids.Add(Grid);
+	}
 
-	size_t Num() { return Grids.Num(); }
+	size_t Num() const
+	{
+		return Grids.Num();
+	}
 
-	USquareGrid* operator[](std::size_t idx) { return Grids[idx]; }
+	USquareGrid* operator[](const std::size_t Idx)
+	{
+		return Grids[Idx];
+	}
 
-	const USquareGrid* operator[](std::size_t idx) const { return Grids[idx]; }
+	const USquareGrid* operator[](const std::size_t Idx) const
+	{
+		return Grids[Idx];
+	}
 };
 
 /**

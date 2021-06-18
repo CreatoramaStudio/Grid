@@ -15,7 +15,6 @@ enum class EGridType : uint8
 	Hexagon
 };
 
-
 /**
 *
 */
@@ -26,7 +25,7 @@ class GRIDRUNTIME_API UGrid : public UObject
 
 public:
 	UGrid();
-	virtual ~UGrid();
+	virtual ~UGrid() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	virtual FVector GetCenter() const;
@@ -41,7 +40,7 @@ public:
 	virtual bool Equal(const UGrid* R) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Grid")
-	virtual void SetVisibility(bool NewVisibility);
+	virtual void SetVisibility(bool bNewVisibility);
 
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	virtual bool GetVisibility() const;

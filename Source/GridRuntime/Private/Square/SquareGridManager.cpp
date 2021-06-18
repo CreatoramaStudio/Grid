@@ -14,7 +14,7 @@ void USquareGridManager::Deinitialize()
 	Super::Deinitialize();
 }
 
-void USquareGridManager::SetGridSize(float NewSize)
+void USquareGridManager::SetGridSize(const float NewSize)
 {
 	this->GridSize = NewSize;
 
@@ -51,14 +51,14 @@ void USquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grid
 	USquareGrid* MinGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Min));
 	USquareGrid* MaxGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Max));
 
-	FIntVector MinCoord = MinGrid->GetCoord();
-	FIntVector MaxCoord = MaxGrid->GetCoord();
+	const FIntVector MinCoord = MinGrid->GetCoord();
+	const FIntVector MaxCoord = MaxGrid->GetCoord();
 
-	TArray<UGrid*> TmpGrids;
 	for (int i = MinCoord.X; i <= MaxCoord.X; ++i)
 	{
 		for (int j = MinCoord.Y; j <= MaxCoord.Y; ++j)
 		{
+			TArray<UGrid*> TmpGrids;
 			FIntVector CurrCoord(FIntVector(i, j, 0));
 
 			GetGridsByCoord(CurrCoord, TmpGrids);
@@ -82,11 +82,11 @@ void USquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<
 
 	FIntVector Coord = Center->Coord;
 
-	TArray<UGrid*> TmpGrids;
 	for (int i = -Range; i <= Range; ++i)
 	{
 		for (int j = -Range; j <= Range; ++j)
 		{
+			TArray<UGrid*> TmpGrids;
 			Coord.X = Center->Coord.X + i;
 			Coord.Y = Center->Coord.Y + j;
 
@@ -132,7 +132,7 @@ void USquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<U
 {
 	Grids.Reset();
 
-	uint64 GridUniqueId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
+	const uint64 GridUniqueId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
 
 	FSquareGridArray GridArray;
 	if (GridsPool.Contains(GridUniqueId))
@@ -152,7 +152,7 @@ void USquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<U
 
 USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position)
 {
-	FIntVector Coord(FMath::RoundToInt(Position.X / GridSize), FMath::RoundToInt(Position.Y / GridSize), 0);
+	const FIntVector Coord(FMath::RoundToInt(Position.X / GridSize), FMath::RoundToInt(Position.Y / GridSize), 0);
 
 	TArray<USquareGrid*> Grids;
 	GetSquareGridsByCoord(Coord, Grids);
@@ -164,7 +164,7 @@ USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position
 	{
 		USquareGrid* Grid = Grids[i];
 
-		int Distance = FMath::Abs(Grid->Height - Position.Z);
+		const int Distance = FMath::Abs(Grid->Height - Position.Z);
 		if (Distance < MinDistance)
 		{
 			MinDistance = Distance;
@@ -178,7 +178,7 @@ USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position
 void USquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& GridArray)
 {
 	TArray<FHitResult> HitResults;
-	FVector Center(Coord.X * GridSize, Coord.Y * GridSize, 0.f);
+	const FVector Center(Coord.X * GridSize, Coord.Y * GridSize, 0.f);
 
 	LineTraceTest(Center, HitResults);
 
@@ -187,10 +187,10 @@ void USquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& 
 		if (i != 0)
 		{
 			// if this static mesh is too close to previous one, it has been blocked, skip this result
-			FVector Oringin, Extent;
-			HitResults[i - 1].Actor->GetActorBounds(true, Oringin, Extent);
+			FVector Origin, Extent;
+			HitResults[i - 1].Actor->GetActorBounds(true, Origin, Extent);
 
-			FBox Bound = FBox::BuildAABB(Oringin, Extent);
+			FBox Bound = FBox::BuildAABB(Origin, Extent);
 
 			FVector TestPoint = HitResults[i].ImpactPoint;
 

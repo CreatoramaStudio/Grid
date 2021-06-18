@@ -2,8 +2,6 @@
 #include "GridManager.h"
 #include "GridPainter/GridPainter.h"
 #include "Components/DecalComponent.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 UGrid::UGrid()
 {
@@ -44,11 +42,11 @@ bool UGrid::Equal(const UGrid* R) const
 	return Coord == R->Coord && FMath::Abs(Height - R->Height) <= FLT_EPSILON;
 }
 
-void UGrid::SetVisibility(bool Visibility)
+void UGrid::SetVisibility(const bool bNewVisibility)
 {
-	if (bVisible != Visibility)
+	if (bVisible != bNewVisibility)
 	{
-		bVisible = Visibility;
+		bVisible = bNewVisibility;
 		GridManager->GetGridPainter()->UpdateGridState(this);
 	}
 }
