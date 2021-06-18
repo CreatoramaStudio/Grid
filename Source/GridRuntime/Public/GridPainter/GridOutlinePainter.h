@@ -17,7 +17,7 @@ public:
 	UGridOutlinePainter();
 	virtual ~UGridOutlinePainter();
 
-	virtual void SetGridManager(AGridManager* NewGridManager) override;
+	virtual void SetGridManager(UGridManager* NewGridManager) override;
 	
 	virtual void TickImpl_Implementation(float DeltaTime) override;
 

@@ -1,5 +1,5 @@
 #include "Components/GridSensingComponent.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
 #include "Engine/Engine.h"
 #include "EngineUtils.h"
 #include "Util/GridUtilities.h"
@@ -63,13 +63,13 @@ void UGridSensingComponent::GetSensingGrids(TArray<UGrid*>& SensingGrids) const
 	GetSensingGridsInternal(GetGridManager(), SensingGrids);
 }
 
-void UGridSensingComponent::GetSensingGridsInternal(AGridManager* GridManager, TArray<UGrid*>& SensingGrids) const
+void UGridSensingComponent::GetSensingGridsInternal(UGridManager* GridManager, TArray<UGrid*>& SensingGrids) const
 {
 	SensingGrids.Reset();
 
 	if (GridManager == nullptr)
 	{
-		LOG_WARNING(TEXT("UGridSensingComponent::GetSensingGridsInternal GridManager is nullptr."));
+		PrintWarningGridRuntime("UGridSensingComponent::GetSensingGridsInternal GridManager is nullptr.");
 		return;
 	}
 
@@ -78,7 +78,7 @@ void UGridSensingComponent::GetSensingGridsInternal(AGridManager* GridManager, T
 
 	GetOwner()->GetActorEyesViewPoint(SensorLocation, SensorRotation);
 
-	ASquareGridManager* SquareGridMgr = Cast<ASquareGridManager>(GridManager);
+	USquareGridManager* SquareGridMgr = Cast<USquareGridManager>(GridManager);
 	if (SquareGridMgr != nullptr)
 	{
 		SquareGridMgr->GetSquareGridsByRange(SquareGridMgr->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids, bDiagonal);
@@ -181,7 +181,7 @@ AController* UGridSensingComponent::GetSensorController() const
 	return nullptr;
 }
 
-AGridManager* UGridSensingComponent::GetGridManager() const
+UGridManager* UGridSensingComponent::GetGridManager() const
 {
 	AActor* Owner = GetOwner();
 	if (Owner->GetClass()->ImplementsInterface(UGridPawnInterface::StaticClass()))
@@ -192,7 +192,7 @@ AGridManager* UGridSensingComponent::GetGridManager() const
 APawn* UGridSensingComponent::GetPawnByGrid(UGrid* Grid) const
 {
 	AActor* Owner = GetOwner();
-	AGridManager* GridManager = GetGridManager();
+	UGridManager* GridManager = GetGridManager();
 
 	if (ensure(GridManager != nullptr))
 	{

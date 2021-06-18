@@ -1,38 +1,39 @@
 #include "Square/SquareGridManager.h"
-#include "GridRuntimePCH.h"
-#include "Square/SquarePathFinder.h"
+
+#include "GridPainter/GridDecalPainter.h"
 #include "Util/GridUtilities.h"
 
-ASquareGridManager::ASquareGridManager()
+
+void USquareGridManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	PathFinderClass = USquarePathFinder::StaticClass();
+	Super::Initialize(Collection);
 }
 
-ASquareGridManager::~ASquareGridManager()
+void USquareGridManager::Deinitialize()
 {
-
+	Super::Deinitialize();
 }
 
-void ASquareGridManager::SetGridSize(float NewGridSize)
+void USquareGridManager::SetGridSize(float NewSize)
 {
-	this->GridSize = NewGridSize;
+	this->GridSize = NewSize;
 
 	for (auto& Elem : GridsPool)
 	{
 		FSquareGridArray& GridArray = Elem.Value;
 		for (int i = 0; i < GridArray.Grids.Num(); ++i)
 		{
-			GridArray[i]->SetGridSize(NewGridSize);
+			GridArray[i]->SetGridSize(NewSize);
 		}
 	}
 }
 
-UGrid* ASquareGridManager::GetGridByPosition(const FVector& Position)
+UGrid* USquareGridManager::GetGridByPosition(const FVector& Position)
 {
 	return GetSquareGridByPosition(Position);
 }
 
-void ASquareGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
+void USquareGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -45,7 +46,7 @@ void ASquareGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>
 	}
 }
 
-void ASquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
+void USquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
 {
 	USquareGrid* MinGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Min));
 	USquareGrid* MaxGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Max));
@@ -67,12 +68,12 @@ void ASquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grid
 	}
 }
 
-void ASquareGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
+void USquareGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
 {
 	GetSquareGridsByRange(Center, Range, Grids, false);
 }
 
-void ASquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids, bool bDiagonal)
+void USquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids, bool bDiagonal)
 {
 	Grids.Reset();
 
@@ -109,7 +110,7 @@ void ASquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<
 	});
 }
 
-void ASquareGridManager::ClearAllGridInfo()
+void USquareGridManager::ClearAllGridInfo()
 {
 	for (auto& Elem : GridsPool)
 	{
@@ -127,7 +128,7 @@ void ASquareGridManager::ClearAllGridInfo()
 	}
 }
 
-void ASquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<USquareGrid*>& Grids)
+void USquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<USquareGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -149,7 +150,7 @@ void ASquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<U
 	}
 }
 
-USquareGrid* ASquareGridManager::GetSquareGridByPosition(const FVector& Position)
+USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position)
 {
 	FIntVector Coord(FMath::RoundToInt(Position.X / GridSize), FMath::RoundToInt(Position.Y / GridSize), 0);
 
@@ -174,7 +175,7 @@ USquareGrid* ASquareGridManager::GetSquareGridByPosition(const FVector& Position
 	return Rtn;
 }
 
-void ASquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& GridArray)
+void USquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& GridArray)
 {
 	TArray<FHitResult> HitResults;
 	FVector Center(Coord.X * GridSize, Coord.Y * GridSize, 0.f);
@@ -207,7 +208,7 @@ void ASquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& 
 	}
 }
 
-USquareGrid* ASquareGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
+USquareGrid* USquareGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	USquareGrid* Grid = NewObject<USquareGrid>(this, USquareGrid::StaticClass());
 	check(Grid != nullptr);

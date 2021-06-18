@@ -20,7 +20,7 @@ void UGridPainter::PostInitPainter()
 
 }
 
-void UGridPainter::SetGridManager(AGridManager* NewGridManager)
+void UGridPainter::SetGridManager(UGridManager* NewGridManager)
 {
 	GridManager = NewGridManager;
 }

@@ -1,5 +1,5 @@
 #include "Components/DefaultGridNavigationAgent.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 
@@ -42,29 +42,29 @@ bool UDefaultGridNavigationAgent::RequestMove_Implementation(APawn* Pawn, UGrid*
 	Delegate.BindUFunction(this, "OnAIControllerMoveCompeleted");
 	CurrentController->ReceiveMoveCompleted.AddUnique(Delegate);
 
-	EPathFollowingRequestResult::Type Result = CurrentController->MoveToLocation(To->GetCenter(), AcceptanceRadius, false);
+	const EPathFollowingRequestResult::Type Result = CurrentController->MoveToLocation(To->GetCenter(), AcceptanceRadius, false);
 
-	bool Succ = false;
+	bool bSucc = false;
 
 	switch (Result)
 	{
 	case EPathFollowingRequestResult::Type::AlreadyAtGoal:
 	case EPathFollowingRequestResult::Type::RequestSuccessful:
 		{
-			Succ = true;
+			bSucc = true;
 			break;
 		}
 	case EPathFollowingRequestResult::Failed:
 		{
-			FVector Dest = To->GetCenter();
-			LOG_ERROR(TEXT("UDefaultGridNavigationAgent::RequestMove_Implementation failed, Destination is (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
+			const FVector Dest = To->GetCenter();
+			PrintErrorGridRuntime("UDefaultGridNavigationAgent::RequestMove_Implementation failed, Destination is " + Dest.ToString());
 			break;
 		}
 	default:
 		break;
 	}
 
-	return Succ;
+	return bSucc;
 }
 
 void UDefaultGridNavigationAgent::StopMove_Implementation()
@@ -92,7 +92,7 @@ void UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted(FAIRequestID Requ
 		}
 	default:
 		{
-			LOG_ERROR(TEXT("UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted failed, Result: %d"), (int)Result);
+			PrintErrorGridRuntime("UDefaultGridNavigationAgent::OnAIControllerMoveCompeleted failed, Result: " +  Result);
 		}
 		break;
 	}

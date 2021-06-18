@@ -22,7 +22,7 @@ public:
 
 	virtual void PostInitPainter();
 
-	virtual void SetGridManager(AGridManager* NewGridManager);
+	virtual void SetGridManager(UGridManager* NewGridManager);
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,7 +39,7 @@ public:
 	virtual void TickImpl_Implementation(float DeltaTime);
 
 	UPROPERTY(BlueprintReadOnly, Category = "GridPainter")
-	AGridManager* GridManager;
+	UGridManager* GridManager;
 
 	UPROPERTY(BlueprintReadWrite, Category = "GridPainter")
 	TArray<UGrid*> VisibleGrids;

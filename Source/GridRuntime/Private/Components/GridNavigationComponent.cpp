@@ -1,5 +1,5 @@
 #include "Components/GridNavigationComponent.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
 #include "Grid.h"
 #include "GridManager.h"
 #include "Components/DefaultGridNavigationAgent.h"
@@ -43,7 +43,7 @@ void UGridNavigationComponent::BeginPlay()
 		}
 		else
 		{
-			LOG_ERROR(TEXT("UGridNavigationComponent::BeginPlay create grid navigation agent failed!"));
+			PrintErrorGridRuntime("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
 		}
 	}
 
@@ -58,23 +58,23 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid, UGridPathFinder* Pat
 {
 	if (OwnerPawn == nullptr)
 	{
-		LOG_ERROR(TEXT("UGridNavigationComponent::RequestMove failed, OwnerPawn is null"));
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, OwnerPawn is null");
 		return false;
 	}
 
 	if (OwnerController == nullptr)
 	{
-		LOG_ERROR(TEXT("UGridNavigationComponent::RequestMove failed, OwnerController is null"));
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, OwnerController is null");
 		return false;
 	}
 
 	if (DestGrid == nullptr)
 	{
-		LOG_WARNING(TEXT("UGridNavigationComponent::RequestMove failed, DestGrid is null"));
+		PrintWarningGridRuntime("UGridNavigationComponent::RequestMove failed, DestGrid is null");
 		return false;
 	}
 
-	AGridManager* GridManager = DestGrid->GridManager;
+	UGridManager* GridManager = DestGrid->GridManager;
 
 	if (!ensure(GridManager != nullptr))
 	{
@@ -142,7 +142,7 @@ bool UGridNavigationComponent::MoveToNextGrid()
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
 		return false;
 
-	AGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
 
 	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];
@@ -151,7 +151,7 @@ bool UGridNavigationComponent::MoveToNextGrid()
 
 	if (CurrentAgent == nullptr)
 	{
-		LOG_ERROR(TEXT("UGridNavigationComponent::MoveToNextGrid can't find proper agent"));
+		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
 	}
 
@@ -167,7 +167,7 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
 		return false;
 
-	AGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
 
 	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];
@@ -176,7 +176,7 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	
 	if (Agent == nullptr)
 	{
-		LOG_ERROR(TEXT("UGridNavigationComponent::MoveToNextGrid can't find proper agent"));
+		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
 	}
 
@@ -233,7 +233,7 @@ void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool Succ)
 	}
 	else
 	{
-		LOG_ERROR(TEXT("UGridNavigationComponent::OnMoveCompleted failed"));
+		PrintErrorGridRuntime("UGridNavigationComponent::OnMoveCompleted failed");
 
 		bIsMoving = false;
 	}

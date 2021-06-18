@@ -1,5 +1,5 @@
 #include "Components/LineComponent.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
 #include "PrimitiveSceneProxy.h"
 #include "SceneManagement.h"
 
@@ -102,7 +102,7 @@ void ULineComponent::SetPoints(const TArray<FVector>& Points)
 {
 	if (SceneProxy == nullptr)
 	{
-		LOG_WARNING(TEXT("ULineComponent::SetPoints SceneProxy is null, your actor is hidden in game?"));
+		PrintWarningGridRuntime("ULineComponent::SetPoints SceneProxy is null, your actor is hidden in game?");
 		return;
 	}
 	FUpdateParams UpdateParams;

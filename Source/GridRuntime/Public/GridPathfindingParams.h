@@ -5,7 +5,7 @@
 #include "GridPathfindingParams.generated.h"
 
 class UGrid;
-class AGridManager;
+class UGridManager;
 
 USTRUCT(BlueprintType)
 struct GRIDRUNTIME_API FGridPathfindingRequest
@@ -60,7 +60,7 @@ public:
 	AActor* GetSender() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
-	AGridManager* GetGridManager() const;
+	UGridManager* GetGridManager() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	const FGameplayTagContainer& GetExtraTags() const;
@@ -85,5 +85,5 @@ public:
 	FGridPathfindingRequest Request;
 
 	UPROPERTY()
-	AGridManager* GridManager;
+	UGridManager* GridManager;
 };

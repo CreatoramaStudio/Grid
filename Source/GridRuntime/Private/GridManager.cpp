@@ -1,50 +1,31 @@
 #include "GridManager.h"
-#include "GridRuntimePCH.h"
 #include "GridPainter/GridDecalPainter.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Containers/Queue.h"
 
-AGridManager::AGridManager()
+void UGridManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	PrimaryActorTick.bCanEverTick = true;
-
-	GridPainter = nullptr;
-	GridSize = 0.f;
-	TraceTestDistance = 10000.f;
-
-	PathFinder = nullptr;
-
-	GridInfoClass = UGridInfo::StaticClass();
-	GridPainterClass = UGridDecalPainter::StaticClass();
 }
 
-AGridManager::~AGridManager()
+void UGridManager::Deinitialize()
 {
-
 }
 
-void AGridManager::PostInitializeComponents()
+void UGridManager::InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass)
 {
-	Super::PostInitializeComponents();
+	GridPathFinderClass = PathFinderClass;
+	GridInfoClass = InfoClass;
+	GridPainterClass = PainterClass;
 
-	PostInitGridManager();
-}
-
-void AGridManager::BeginDestroy()
-{
-	Super::BeginDestroy();
-}
-
-void AGridManager::PostInitGridManager()
-{
 	SetGridPainter(GridPainterClass);
 
-	PathFinder = NewObject<UGridPathFinder>(this, PathFinderClass);
+	PathFinder = NewObject<UGridPathFinder>(this, GridPathFinderClass);
 	PathFinder->GridManager = this;
+
 }
 
-void AGridManager::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)
+void UGridManager::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)
 {
+	GridPainterClass = PainterClass;
 	if (GridPainter != nullptr)
 		GridPainter->ConditionalBeginDestroy();
 
@@ -54,12 +35,12 @@ void AGridManager::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)
 	GridPainter->SetGridManager(this);
 }
 
-UGridPainter* AGridManager::GetGridPainter()
+UGridPainter* UGridManager::GetGridPainter() const
 {
 	return GridPainter;
 }
 
-void AGridManager::LineTraceTest(const FVector& Center, TArray<FHitResult>& Results)
+void UGridManager::LineTraceTest(const FVector& Center, TArray<FHitResult>& Results) const
 {
 	FVector Start = Center;
 	FVector End = Start;
@@ -67,59 +48,59 @@ void AGridManager::LineTraceTest(const FVector& Center, TArray<FHitResult>& Resu
 	Start.Z += TraceTestDistance / 2;
 	End.Z -= TraceTestDistance / 2;
 
-	TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes = { UEngineTypes::ConvertToObjectType(ECC_WorldStatic) };
+	const TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes = { UEngineTypes::ConvertToObjectType(ECC_WorldStatic) };
 
-	TArray<AActor*> IgnoreActors;
+	const TArray<AActor*> IgnoreActors;
 
-	UKismetSystemLibrary::LineTraceMultiForObjects((UObject*)GetWorld(), Start, End, ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, Results, true);
+	UKismetSystemLibrary::LineTraceMultiForObjects(GetWorld(), Start, End, ObjectTypes, false, IgnoreActors, EDrawDebugTrace::None, Results, true);
 }
 
-void AGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
+void UGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
 {
 	Grids.Empty();
 }
 
-UGrid* AGridManager::GetGridByCoord(const FIntVector& Coord)
+UGrid* UGridManager::GetGridByCoord(const FIntVector& Coord)
 {
 	TArray<UGrid*> Grids;
 	GetGridsByCoord(Coord, Grids);
 	return Grids.Num() > 0 ? Grids[0] : nullptr;
 }
 
-UGrid* AGridManager::GetGridByPosition(const FVector& Position)
+UGrid* UGridManager::GetGridByPosition(const FVector& Position)
 {
 	return nullptr;
 }
 
-void AGridManager::ClearAllGridInfo()
+void UGridManager::ClearAllGridInfo()
 {
 
 }
 
-UGridPathFinder* AGridManager::GetPathFinder() const
+UGridPathFinder* UGridManager::GetPathFinder() const
 {
 	return PathFinder;
 }
 
-void AGridManager::SetGridSize(float NewCellSize)
+void UGridManager::SetGridSize(const float NewSize)
 {
-	if (this->GridSize != NewCellSize)
+	if (this->GridSize != NewSize)
 	{
-		this->GridSize = NewCellSize;
+		this->GridSize = NewSize;
 	}
 }
 
-float AGridManager::GetGridSize() const
+float UGridManager::GetGridSize() const
 {
 	return GridSize;
 }
 
-void AGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
+void UGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 }
 
-void AGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
+void UGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 }

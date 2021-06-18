@@ -98,13 +98,13 @@ void FEdModeGridEditor::ActorMoveNotify()
 
 	if (Actor != nullptr && CurrentModeName == FGridEditorCommands::HexagonModeName && HexagonGridSettings->bGridSnap)
 	{
-		AGridManager* CellManager = GetGridManager();
-		UGrid* Grid = CellManager->GetGridByPosition(Actor->GetActorLocation());
+		UGridManager* GridManager = GetGridManager();
+		UGrid* Grid = GridManager->GetGridByPosition(Actor->GetActorLocation());
 		
 		if (Grid != nullptr)
 		{
 			FVector NewLocation = Actor->GetActorLocation();
-			FVector GridCenter = Grid->GetCenter();
+			const FVector GridCenter = Grid->GetCenter();
 			NewLocation.X = GridCenter.X;
 			NewLocation.Y = GridCenter.Y;
 
@@ -142,7 +142,7 @@ void FEdModeGridEditor::SetCurrentMode(FName ModeName)
 {
 	CurrentModeName = ModeName;
 
-	AGridManager* GridManager = GetGridManager();
+	UGridManager* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 	DecalPainter->bIsSquareGrid = CurrentModeName == FGridEditorCommands::SquareModeName;
 }
@@ -183,17 +183,17 @@ UWorld* FEdModeGridEditor::GetEditorWorld()
 	return GEditor->GetEditorWorldContext().World();
 }
 
-AGridManager* FEdModeGridEditor::GetGridManager()
+UGridManager* FEdModeGridEditor::GetGridManager()
 {
 	if (CurrentModeName == FGridEditorCommands::SquareModeName)
 	{
 		if (SquareGridManager == nullptr)
 		{
-			SquareGridManager = GetEditorWorld()->SpawnActor<ASquareGridManager>();
+			SquareGridManager = GetEditorWorld()->SpawnActor<USquareGridManager>();
 			SquareGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			SquareGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
-			SquareGridManager->PostInitGridManager();
+			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass);
 			UpdateGridSettings();
 		}
 
@@ -203,11 +203,11 @@ AGridManager* FEdModeGridEditor::GetGridManager()
 	{
 		if (HexGridManager == nullptr)
 		{
-			HexGridManager = GetEditorWorld()->SpawnActor<AHexagonGridManager>();
+			HexGridManager = GetEditorWorld()->SpawnActor<UHexagonGridManager>();
 			HexGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			HexGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
-			HexGridManager->PostInitGridManager();
+			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass);
 			UpdateGridSettings();
 		}
 
@@ -256,7 +256,7 @@ void FEdModeGridEditor::UpdateGridSettings()
 
 void FEdModeGridEditor::UpdateSquareSettings()
 {
-	AGridManager* GridManager = GetGridManager();
+	UGridManager* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 
 	if (DecalPainter != nullptr)
@@ -286,7 +286,7 @@ void FEdModeGridEditor::UpdateSquareSettings()
 
 void FEdModeGridEditor::UpdateHexagonSettings()
 {
-	AGridManager* GridManager = GetGridManager();
+	UGridManager* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 
 	if (DecalPainter != nullptr)

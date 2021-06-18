@@ -16,7 +16,7 @@ UGridOutlinePainter::~UGridOutlinePainter()
 
 }
 
-void UGridOutlinePainter::SetGridManager(AGridManager* NewGridManager)
+void UGridOutlinePainter::SetGridManager(UGridManager* NewGridManager)
 {
 	Super::SetGridManager(NewGridManager);
 

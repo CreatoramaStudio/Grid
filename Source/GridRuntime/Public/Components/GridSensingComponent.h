@@ -7,7 +7,7 @@
 #include "GameFramework/Pawn.h"
 #include "GridSensingComponent.generated.h"
 
-class AGridManager;
+class UGridManager;
 class AController;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSeePawnEvent, APawn*, Pawn);
@@ -74,11 +74,11 @@ protected:
 
 	AController* GetSensorController() const;
 
-	virtual AGridManager* GetGridManager() const;
+	virtual UGridManager* GetGridManager() const;
 
 	virtual APawn* GetPawnByGrid(UGrid* Grid) const;
 
-	virtual void GetSensingGridsInternal(AGridManager* GridManager, TArray<UGrid*>& SensingGrids) const;
+	virtual void GetSensingGridsInternal(UGridManager* GridManager, TArray<UGrid*>& SensingGrids) const;
 
 protected:
 	FTimerHandle TimerHandle_Sensing;

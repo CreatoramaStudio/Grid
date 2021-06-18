@@ -1,5 +1,5 @@
 #include "Components/GridOutlineComponent.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
 #include "PrimitiveSceneProxy.h"
 #include "SceneManagement.h"
 #include "GridPainter/GridOutlinePainter.h"
@@ -145,7 +145,7 @@ public:
 		case FSquareEdge::Bottom:
 			return Center + FVector(-HalfGridSize, -HalfGridSize, UpdateParams.ZOffset);
 		default:
-			LOG_ERROR(TEXT("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV0 unknown direction"));
+			PrintErrorGridRuntime("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV0 unknown direction");
 			return Center;
 		}
 	}
@@ -164,7 +164,7 @@ public:
 		case FSquareEdge::Bottom:
 			return Center + FVector(-HalfGridSize, HalfGridSize, UpdateParams.ZOffset);
 		default:
-			LOG_ERROR(TEXT("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV1 unknown direction"));
+			PrintErrorGridRuntime("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV1 unknown direction");
 			return Center;
 		}
 	}
@@ -344,7 +344,7 @@ public:
 			bool LSucc = UpdateParams.ColorPriorities.Find(L.Color, LIdx);
 			bool RSucc = UpdateParams.ColorPriorities.Find(R.Color, RIdx);
 			if (!LSucc || !RSucc)
-				LOG_ERROR(TEXT("FGridOutlinePrimitiveSceneProxy::CollectGridOutline Hexagon grid sort failed, can't find grid color in UpdateParams.ColorPriorities"));
+				PrintErrorGridRuntime("FGridOutlinePrimitiveSceneProxy::CollectGridOutline Hexagon grid sort failed, can't find grid color in UpdateParams.ColorPriorities");
 			return LIdx < RIdx;
 		});
 
@@ -427,11 +427,11 @@ FBoxSphereBounds UGridOutlineComponent::CalcBounds(const FTransform& LocalToWorl
 void UGridOutlineComponent::UpdateGridInfo()
 {
 	UGridOutlinePainter* GridPainter = Cast<UGridOutlinePainter>(GetOuter());
-	AGridManager* GridManager = GridPainter->GridManager;
+	UGridManager* GridManager = GridPainter->GridManager;
 
 	FGridOutlinePrimitiveCompUpdateParams UpdateParams;
 	UpdateParams.SceneProxy = (FGridOutlineSceneProxy*)SceneProxy;
-	UpdateParams.GridType = Cast<ASquareGridManager>(GridManager) == nullptr ? EGridType::Hexagon : EGridType::Square;
+	UpdateParams.GridType = Cast<USquareGridManager>(GridManager) == nullptr ? EGridType::Hexagon : EGridType::Square;
 	UpdateParams.GridSize = GridManager->GetGridSize();
 	UpdateParams.Thickness = GridPainter->OutlineThickness;
 	UpdateParams.ZOffset = GridPainter->ZOffset;

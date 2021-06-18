@@ -7,7 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "GridUtilities.generated.h"
 
-class AGridManager;
+class UGridManager;
 
 /**
  * 

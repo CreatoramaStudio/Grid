@@ -1,18 +1,20 @@
 #include "Hexagon/HexagonGridManager.h"
-#include "GridRuntimePCH.h"
+#include "GridRuntimeLog.h"
+#include "GridPainter/GridDecalPainter.h"
+#include "Hexagon/HexagonPathFinder.h"
 #include "Util/GridUtilities.h"
 
-AHexagonGridManager::AHexagonGridManager()
+void UHexagonGridManager::Initialize(FSubsystemCollectionBase& Collection)
 {
-	PathFinderClass = UHexagonPathFinder::StaticClass();
+	Super::Initialize(Collection);
 }
 
-AHexagonGridManager::~AHexagonGridManager()
+void UHexagonGridManager::Deinitialize()
 {
-
+	Super::Deinitialize();	
 }
 
-void AHexagonGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
+void UHexagonGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -43,28 +45,30 @@ void AHexagonGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid
 	});
 }
 
-void AHexagonGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
+void UHexagonGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
-	LOG_ERROR(TEXT("AHexagonGridManager::GetGridsByBound not implemnt yet"));
+	PrintErrorGridRuntime("AHexagonGridManager::GetGridsByBound not implemnt yet");
 }
 
-void AHexagonGridManager::SetGridSize(float NewCellSize)
+
+
+void UHexagonGridManager::SetGridSize(float NewSize)
 {
-	this->GridSize = NewCellSize;
+	this->GridSize = NewSize;
 
 	for (auto& Elem : GridsPool)
 	{
 		FHexagonGridArray& GridArray = Elem.Value;
 		for (int i = 0; i < GridArray.Num(); ++i)
 		{
-			GridArray[i]->SetGridSize(NewCellSize);
+			GridArray[i]->SetGridSize(NewSize);
 		}
 	}
 }
 
-void AHexagonGridManager::ClearAllGridInfo()
+void UHexagonGridManager::ClearAllGridInfo()
 {
 	for (auto& Elem : GridsPool)
 	{
@@ -82,7 +86,7 @@ void AHexagonGridManager::ClearAllGridInfo()
 	}
 }
 
-void AHexagonGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
+void UHexagonGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -96,7 +100,7 @@ void AHexagonGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*
 	}
 }
 
-void AHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray<UHexagonGrid*>& Grids)
+void UHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray<UHexagonGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -118,7 +122,7 @@ void AHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray
 	}
 }
 
-FIntVector AHexagonGridManager::CubeRound(float _X, float _Y, float _Z)
+FIntVector UHexagonGridManager::CubeRound(float _X, float _Y, float _Z)
 {
 	int X = FPlatformMath::RoundToInt(_X);
 	int Y = FPlatformMath::RoundToInt(_Y);
@@ -144,12 +148,12 @@ FIntVector AHexagonGridManager::CubeRound(float _X, float _Y, float _Z)
 	return FIntVector(X, Y, Z);
 }
 
-UGrid* AHexagonGridManager::GetGridByPosition(const FVector& Position)
+UGrid* UHexagonGridManager::GetGridByPosition(const FVector& Position)
 {
 	return GetHexagonGridByPosition(Position);
 }
 
-UHexagonGrid* AHexagonGridManager::GetHexagonGridByPosition(const FVector& Position)
+UHexagonGrid* UHexagonGridManager::GetHexagonGridByPosition(const FVector& Position)
 {
 	float X = (Position.X * FMath::Sqrt(3) / 3 - Position.Y / 3) / GridSize;
 	float Z = Position.Y * 2 / 3 / GridSize;
@@ -178,7 +182,7 @@ UHexagonGrid* AHexagonGridManager::GetHexagonGridByPosition(const FVector& Posit
 	return Rtn;
 }
 
-void AHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray& GridArray)
+void UHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray& GridArray)
 {
 	TArray<FHitResult> HitResults;
 
@@ -212,7 +216,7 @@ void AHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray
 	}
 }
 
-UHexagonGrid* AHexagonGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
+UHexagonGrid* UHexagonGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	UHexagonGrid* Grid = NewObject<UHexagonGrid>(this, UHexagonGrid::StaticClass());
 	check(Grid != nullptr);

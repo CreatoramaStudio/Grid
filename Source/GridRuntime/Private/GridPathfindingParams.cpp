@@ -33,7 +33,7 @@ AActor* UGridPathFinder::GetSender() const
 	return Request.Sender;
 }
 
-AGridManager* UGridPathFinder::GetGridManager() const
+UGridManager* UGridPathFinder::GetGridManager() const
 {
 	return GridManager;
 }

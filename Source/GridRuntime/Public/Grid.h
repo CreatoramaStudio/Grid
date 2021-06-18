@@ -4,7 +4,7 @@
 #include "GridInfo.h"
 #include "Grid.generated.h"
 
-class AGridManager;
+class UGridManager;
 class UGridPainter;
 
 UENUM(BlueprintType)
@@ -75,7 +75,7 @@ public:
 	UGridInfo* GridInfo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Grid")
-	AGridManager* GridManager;
+	UGridManager* GridManager;
 
 	FIntVector Coord;
 
@@ -84,6 +84,6 @@ protected:
 
 	float GridSize;
 
-	friend class AGridManager;
+	friend class UGridManager;
 	friend class UGridPainter;
 };

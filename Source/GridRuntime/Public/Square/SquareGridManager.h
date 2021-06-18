@@ -25,22 +25,26 @@ struct FSquareGridArray
 /**
 *
 */
-UCLASS(Transient)
-class GRIDRUNTIME_API ASquareGridManager : public AGridManager
+UCLASS()
+class GRIDRUNTIME_API USquareGridManager : public UGridManager
 {
 	GENERATED_BODY()
 
 public:
-	ASquareGridManager();
-	virtual ~ASquareGridManager();
 
-	virtual void SetGridSize(float CellSize) override;
+	/** Implement this for initialization of instances of the system */
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	/** Implement this for deinitialization of instances of the system */
+	virtual void Deinitialize() override;
+
+	virtual void SetGridSize(float NewSize) override;
 
 	virtual UGrid* GetGridByPosition(const FVector& Position) override;
 
 	virtual void GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids) override;
 
-	virtual void GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Cells) override;
+	virtual void GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids) override;
 
 	virtual void GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids) override;
 

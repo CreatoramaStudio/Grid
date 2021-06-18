@@ -1,30 +1,35 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Subsystems/WorldSubsystem.h"
 #include "GridPathfindingParams.h"
 #include "GridPainter/GridPainter.h"
 #include "Grid.h"
+#include "GridPainter/GridDecalPainter.h"
+
 #include "GridManager.generated.h"
 
 /**
 *
 */
-UCLASS(Transient)
-class GRIDRUNTIME_API AGridManager : public AActor
+UCLASS(Abstract)
+class GRIDRUNTIME_API UGridManager : public UWorldSubsystem 
 {
 	GENERATED_BODY()
 
 public:
-	AGridManager();
-	virtual ~AGridManager();
 
-	virtual void PostInitializeComponents() override;
+	/** Implement this for initialization of instances of the system */
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-	virtual void BeginDestroy() override;
+	/** Implement this for deinitialization of instances of the system */
+	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
-	virtual void SetGridSize(float GridSize);
+	virtual void InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass);
+
+	UFUNCTION(BlueprintCallable, Category = "GridManager")
+	virtual void SetGridSize(float NewSize);
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
 	virtual float GetGridSize() const;
@@ -55,29 +60,26 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
-	TSubclassOf<UGridPathFinder> PathFinderClass;
+	TSubclassOf<UGridPathFinder> GridPathFinderClass = UGridPathFinder::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
-	TSubclassOf<UGridInfo> GridInfoClass;
+	TSubclassOf<UGridInfo> GridInfoClass = UGridInfo::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
-	TSubclassOf<UGridPainter> GridPainterClass;
+	TSubclassOf<UGridPainter> GridPainterClass = UGridDecalPainter::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn = true), Category = "GridManager")
-	int32 TraceTestDistance;
+	float TraceTestDistance = 10000;
 
 	void SetGridPainter(TSubclassOf<UGridPainter> PainterClass);
 
-	UGridPainter* GetGridPainter();
+	UGridPainter* GetGridPainter() const;
 
-	void LineTraceTest(const FVector& Center, TArray<FHitResult>& Results);
-
-protected:
-	virtual void PostInitGridManager();
+	void LineTraceTest(const FVector& Center, TArray<FHitResult>& Results) const;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridManager")
-	float GridSize;
+	float GridSize = 100;
 
 	UPROPERTY()
 	UGridPainter* GridPainter;

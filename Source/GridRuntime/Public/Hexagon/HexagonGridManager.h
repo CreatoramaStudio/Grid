@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "GridManager.h"
 #include "Hexagon/HexagonGrid.h"
-#include "Hexagon/HexagonPathFinder.h"
 #include "HexagonGridManager.generated.h"
 
 USTRUCT()
@@ -26,16 +25,20 @@ struct FHexagonGridArray
 /**
  * reference: https://www.redblobgames.com/grids/hexagons/
  */
-UCLASS(Transient)
-class GRIDRUNTIME_API AHexagonGridManager : public AGridManager
+UCLASS()
+class GRIDRUNTIME_API UHexagonGridManager : public UGridManager
 {
 	GENERATED_BODY()
 	
 public:
-	AHexagonGridManager();
-	virtual ~AHexagonGridManager();
 
-	virtual void SetGridSize(float CellSize) override;
+	/** Implement this for initialization of instances of the system */
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	/** Implement this for deinitialization of instances of the system */
+	virtual void Deinitialize() override;
+	
+	virtual void SetGridSize(float NewSize) override;
 
 	virtual UGrid* GetGridByPosition(const FVector& Position) override;
 

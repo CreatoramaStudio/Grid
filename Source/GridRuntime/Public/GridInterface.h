@@ -4,7 +4,7 @@
 #include "UObject/Interface.h"
 #include "GridInterface.generated.h"
 
-class AGridManager;
+class UGridManager;
 
 UINTERFACE(Blueprintable)
 class GRIDRUNTIME_API UGridPawnInterface : public UInterface
@@ -18,5 +18,5 @@ class GRIDRUNTIME_API IGridPawnInterface
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Grid")
-	AGridManager* GetGridManager() const;
+	UGridManager* GetGridManager() const;
 };
