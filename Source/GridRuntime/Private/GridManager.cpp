@@ -8,7 +8,7 @@ void UGridManager::Initialize(FSubsystemCollectionBase& Collection)
 
 void UGridManager::Deinitialize()
 {
-	bInitialized = false;
+	DeinitializeManager();
 }
 
 void UGridManager::InitializeManager(const TSubclassOf<UGridPathFinder> PathFinderClass, const TSubclassOf<UGridInfo> InfoClass, const TSubclassOf<UGridPainter> PainterClass, float gridSize, float TraceDistance)
@@ -27,11 +27,30 @@ void UGridManager::InitializeManager(const TSubclassOf<UGridPathFinder> PathFind
 	bInitialized = true;
 }
 
+void UGridManager::DeinitializeManager()
+{
+	if (PathFinder)
+	{
+		PathFinder->ConditionalBeginDestroy();
+	}
+	
+	if (GridPainter)
+	{
+		GridPainter->ConditionalBeginDestroy();
+	}
+	
+
+	bInitialized = false;
+}
+
 void UGridManager::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)
 {
 	GridPainterClass = PainterClass;
-	if (GridPainter != nullptr)
+	
+	if (GridPainter)
+	{
 		GridPainter->ConditionalBeginDestroy();
+	}
 
 	GridPainter = NewObject<UGridPainter>(this, GridPainterClass);
 	check(GridPainter != nullptr);

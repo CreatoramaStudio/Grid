@@ -46,11 +46,19 @@ void UGridNavigationComponent::BeginPlay()
 			PrintErrorGridRuntime("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
 		}
 	}
-
+	
 	OwnerPawn = Cast<APawn>(GetOwner());
-	if (OwnerPawn != nullptr)
+	if (OwnerPawn)
 	{
 		OwnerController = Cast<AAIController>(OwnerPawn->GetController());
+		if(!OwnerController)
+		{
+			PrintWarningGridRuntime("UGridNavigationComponent Cast<AAIController> failed, OwnerController is not AAIController");
+		}
+	}
+	else
+	{
+		PrintWarningGridRuntime("UGridNavigationComponent Cast<APawn> failed, Owner is not APawn");
 	}
 }
 
@@ -145,7 +153,9 @@ bool UGridNavigationComponent::MoveToNextGrid()
 	++FollowingPathIndex;
 
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
+	{
 		return false;
+	}
 
 	UGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
 
@@ -154,7 +164,7 @@ bool UGridNavigationComponent::MoveToNextGrid()
 
 	CurrentAgent = FindAgent(CurrGrid, NextGrid);
 
-	if (CurrentAgent == nullptr)
+	if (!CurrentAgent)
 	{
 		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
@@ -179,13 +189,13 @@ bool UGridNavigationComponent::MoveToNextPoint()
 
 	UGridNavigationAgent* Agent = FindAgent(CurrGrid, NextGrid);
 	
-	if (Agent == nullptr)
+	if (!Agent)
 	{
 		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
 	}
 
-	if (Cast<UDefaultGridNavigationAgent>(Agent) != nullptr)
+	if (Cast<UDefaultGridNavigationAgent>(Agent))
 	{
 		int i;
 		for (i = FollowingPathIndex; i < CurrentFollowingPath.Num() - 1; ++i)
@@ -205,16 +215,14 @@ bool UGridNavigationComponent::MoveToNextPoint()
 
 UGridNavigationAgent* UGridNavigationComponent::FindAgent(UGrid* Start, UGrid* Goal)
 {
-	UGridNavigationAgent* Agent = nullptr;
-	for (int i = 0; i < Agents.Num(); ++i)
+	for (auto Agent : Agents)
 	{
-		if (Agents[i]->Check(OwnerPawn, Start, Goal))
+		if (Agent->Check(OwnerPawn, Start, Goal))
 		{
-			Agent = Agents[i];
-			break;
+			return Agent;
 		}
 	}
-	return Agent;
+	return nullptr;
 }
 
 void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool bSuccess)

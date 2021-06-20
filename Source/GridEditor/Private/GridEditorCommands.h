@@ -6,7 +6,7 @@ class FGridEditorCommands : public TCommands<FGridEditorCommands>
 {
 public:
 	FGridEditorCommands();
-	virtual ~FGridEditorCommands();
+	virtual ~FGridEditorCommands() override;
 
 	virtual void RegisterCommands() override;
 

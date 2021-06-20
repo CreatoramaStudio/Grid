@@ -56,7 +56,6 @@ private:
 	TSharedPtr<class FGridSensingComponentVisualizer> GetSensingCompVisualizer() const;
 
 private:
-	int32 GridShowRange;
 
 	bool bEditorDelegateRegistered;
 

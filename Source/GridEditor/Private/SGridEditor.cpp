@@ -17,7 +17,7 @@ void SGridEditor::Construct(const FArguments& InArgs, TSharedRef<FGridEditorTool
 	// Modes:
 	FToolBarBuilder ModeSwitchButtons(CommandList, FMultiBoxCustomization::None);
 	{
-		ModeSwitchButtons.AddToolBarButton(FGridEditorCommands::Get().SquareMode, NAME_None, LOCTEXT("Mode.Square", "Squarer"), LOCTEXT("Mode.Square.Tooltip", "Square mode"));
+		ModeSwitchButtons.AddToolBarButton(FGridEditorCommands::Get().SquareMode, NAME_None, LOCTEXT("Mode.Square", "Square"), LOCTEXT("Mode.Square.Tooltip", "Square mode"));
 		ModeSwitchButtons.AddToolBarButton(FGridEditorCommands::Get().HexagonMode, NAME_None, LOCTEXT("Mode.Hexagon", "Hexagon"), LOCTEXT("Mode.Hexagon.Tooltip", "Hexagon mode"));
 	}
 

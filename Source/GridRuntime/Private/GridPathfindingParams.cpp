@@ -1,5 +1,7 @@
 #include "GridPathfindingParams.h"
 #include "GridManager.h"
+#include "NavigationSystem.h"
+#include "NavigationPath.h"
 
 FGridPathfindingRequest::FGridPathfindingRequest()
 {
@@ -45,7 +47,13 @@ const FGameplayTagContainer& UGridPathFinder::GetExtraTags() const
 
 bool UGridPathFinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
 {
-	return !Dest->IsEmpty();
+	if (UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
+	{
+		UNavigationPath* Path = NavigationSystem->FindPathToLocationSynchronously(GetWorld(),Start->GetCenter(),Dest->GetCenter());
+		bool bResult = !Dest->IsEmpty() && Path && Path->IsValid() && !Path->IsPartial();
+		return bResult;
+	}
+	return false;
 }
 
 int32 UGridPathFinder::Heuristic_Implementation(UGrid* From, UGrid* To)

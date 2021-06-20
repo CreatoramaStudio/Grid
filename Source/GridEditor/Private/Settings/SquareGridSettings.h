@@ -12,20 +12,26 @@ class USquareGridSettings : public UObject
 
 public:
 	USquareGridSettings();
-	virtual ~USquareGridSettings();
+	virtual ~USquareGridSettings() override;
 
 	void SetParent(FEdModeGridEditor* GridEditorMode);
 
-	UPROPERTY(EditAnywhere, Category = "SqureGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	bool bShowGrids;
 
-	UPROPERTY(EditAnywhere, Category = "SqureGridSettings")
-	float GridSize;
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	int32 GridShowRange = 50;
 
-	UPROPERTY(EditAnywhere, Category = "SqureGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	FVector GridCenter;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float GridSize = 100;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	UMaterialInterface* DecalMaterial;
 
-	UPROPERTY(EditAnywhere, Category = "SqureGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	UMaterialInterface* GridSensingVisualizerMaterial;
 
 private:

@@ -12,23 +12,29 @@ class UHexagonGridSettings : public UObject
 
 public:
 	UHexagonGridSettings();
-	virtual ~UHexagonGridSettings();
+	virtual ~UHexagonGridSettings() override;
 
 	void SetParent(FEdModeGridEditor* GridEditorMode);
 
-	UPROPERTY(EditAnywhere, Category = "HexagonGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	bool bShowGrids;
 
-	UPROPERTY(EditAnywhere, Category = "HexagonGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	int32 GridShowRange = 50;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	FVector GridCenter;
+
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	bool bGridSnap;
 
-	UPROPERTY(EditAnywhere, Category = "HexagonGridSettings")
-	float GridSize;
+	UPROPERTY(EditAnywhere, Category = "Settings")
+	float GridSize = 100;
 
-	UPROPERTY(EditAnywhere, Category = "HexagonGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	UMaterialInterface* DecalMaterial;
 
-	UPROPERTY(EditAnywhere, Category = "HexagonGridSettings")
+	UPROPERTY(EditAnywhere, Category = "Settings")
 	UMaterialInterface* GridSensingVisualizerMaterial;
 
 private:

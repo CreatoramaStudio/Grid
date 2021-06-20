@@ -15,28 +15,31 @@ UDefaultGridNavigationAgent::~UDefaultGridNavigationAgent()
 
 bool UDefaultGridNavigationAgent::Check_Implementation(APawn* Pawn, UGrid* From, UGrid* To)
 {
-	if (Pawn == nullptr || From == nullptr || To == nullptr || Cast<AAIController>(Pawn->GetController()) == nullptr)
+	if (!Pawn || !From|| !To || !Cast<AAIController>(Pawn->GetController()))
+	{
 		return false;
+	}
 
-	UNavigationSystemV1* NavSys = UNavigationSystemV1::GetCurrent(Pawn->GetWorld());
-	UNavigationPath* Path = NavSys->FindPathToLocationSynchronously(Pawn->GetWorld(), From->GetCenter(), To->GetCenter(), Pawn);
+	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(Pawn->GetWorld());
+	UNavigationPath* Path = NavigationSystem->FindPathToLocationSynchronously(Pawn->GetWorld(), From->GetCenter(), To->GetCenter(), Pawn);
 
-	if (Path == nullptr || !Path->IsValid() || Path->IsPartial())
-		return false;
-
-	return true;
+	return Path && Path->IsValid() && !Path->IsPartial();
 }
 
 bool UDefaultGridNavigationAgent::RequestMove_Implementation(APawn* Pawn, UGrid* From, UGrid* To)
 {
-	if (Pawn == nullptr || From == nullptr || To == nullptr)
+	if (!Pawn || !From || !To)
+	{
 		return false;
+	}
 
 	CurrentPawn = Pawn;
 	CurrentController = Cast<AAIController>(Pawn->GetController());
-
-	if (CurrentController == nullptr)
+	
+	if (!CurrentController)
+	{
 		return false;
+	}
 
 	FScriptDelegate Delegate;
 	Delegate.BindUFunction(this, "OnAIControllerMoveCompleted");

@@ -24,7 +24,7 @@ public:
 
 	virtual void StopMove_Implementation() override;
 
-	UPROPERTY(EditDefaultsOnly, Category = "DefaultGridNavigationAgent")
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "DefaultGridNavigationAgent")
 	float AcceptanceRadius;
 
 protected:

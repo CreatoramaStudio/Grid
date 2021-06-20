@@ -7,7 +7,6 @@
 #include "GridEditorModeToolkit.h"
 #include "GridEditorCommands.h"
 #include "Misc/FileHelper.h"
-#include "Misc/MessageDialog.h"
 #include "Components/GridSensingComponent.h"
 #include "ComponentVisualizers/GridSensingComponentVisualizer.h"
 #include "GridPainter_Editor.h"
@@ -21,8 +20,6 @@ FEdModeGridEditor::FEdModeGridEditor()
 
 	HexGridManager = nullptr;
 	SquareGridManager = nullptr;
-
-	GridShowRange = 50;
 
 	SquareGridSettings = NewObject<USquareGridSettings>(GetTransientPackage(), TEXT("SquareGridSettings"), RF_Transactional);
 	SquareGridSettings->SetParent(this);
@@ -72,11 +69,17 @@ void FEdModeGridEditor::Enter()
 	}
 
 	GetSensingCompVisualizer()->SetEnabled(true);
+
+	UpdateGridSettings();
 }
 
 void FEdModeGridEditor::Exit()
 {
 	GetSensingCompVisualizer()->SetEnabled(false);
+
+	UpdateGridSettings();
+	
+	FreeGridManager();
 
 	if (Toolkit.IsValid())
 	{
@@ -145,6 +148,8 @@ void FEdModeGridEditor::SetCurrentMode(FName ModeName)
 	UGridManager* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 	DecalPainter->bIsSquareGrid = CurrentModeName == FGridEditorCommands::SquareModeName;
+
+	UpdateGridSettings();
 }
 
 FName FEdModeGridEditor::GetCurrentMode()
@@ -172,10 +177,18 @@ void FEdModeGridEditor::OnMapChanged(uint32 Event)
 
 void FEdModeGridEditor::OnBeginPIE(bool bIsSimulating)
 {
+	if (!bIsSimulating)
+	{
+		FreeGridManager();
+	}
 }
 
 void FEdModeGridEditor::OnEndPIE(bool bIsSimulating)
 {
+	if (!bIsSimulating)
+	{
+		UpdateGridSettings();
+	}
 }
 
 UWorld* FEdModeGridEditor::GetEditorWorld()
@@ -187,13 +200,18 @@ UGridManager* FEdModeGridEditor::GetGridManager()
 {
 	if (CurrentModeName == FGridEditorCommands::SquareModeName)
 	{
-		if (SquareGridManager == nullptr)
+		if (!SquareGridManager)
 		{
 			SquareGridManager = GetEditorWorld()->GetSubsystem<USquareGridManager>();
+		}
+		if (!SquareGridManager->IsInitialized())
+		{
 			SquareGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			SquareGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
+			
 			SquareGridManager->InitializeManager(SquareGridManager->GridPathFinderClass,SquareGridManager->GridInfoClass,SquareGridManager->GridPainterClass,SquareGridManager->GridSize,SquareGridManager->TraceTestDistance);
+			
 			UpdateGridSettings();
 		}
 
@@ -202,13 +220,18 @@ UGridManager* FEdModeGridEditor::GetGridManager()
 	
 	if (CurrentModeName == FGridEditorCommands::HexagonModeName)
 	{
-		if (HexGridManager == nullptr)
+		if (!HexGridManager)
 		{
 			HexGridManager = GetEditorWorld()->GetSubsystem<UHexagonGridManager>();
+		}
+		if (!HexGridManager->IsInitialized())
+		{
 			HexGridManager->GridPainterClass = UGridPainter_Editor::StaticClass();
 			HexGridManager->GridInfoClass = UGridInfo_Editor::StaticClass();
 			//Actor::PostInitializeComponents wouldn't be called in editor mode, so we create grid painter manually
+			
 			HexGridManager->InitializeManager(HexGridManager->GridPathFinderClass,HexGridManager->GridInfoClass,HexGridManager->GridPainterClass,HexGridManager->GridSize,HexGridManager->TraceTestDistance);
+			
 			UpdateGridSettings();
 		}
 
@@ -266,13 +289,11 @@ void FEdModeGridEditor::UpdateSquareSettings()
 	}
 	GridManager->SetGridSize(SquareGridSettings->GridSize);
 
-	if (SquareGridSettings->bShowGrids)
+	if (SquareGridSettings->bShowGrids && GEditor->GetActiveViewport())
 	{
- 		FEditorViewportClient* Viewport = (FEditorViewportClient*)GEditor->GetActiveViewport()->GetClient();
+		UGrid* Center = GridManager->GetGridByPosition(SquareGridSettings->GridCenter);
 
-		UGrid* Center = GridManager->GetGridByPosition(Viewport->GetViewLocation());
-
-		GridManager->GetGridsByRange(Center, GridShowRange, VisibleGrids);
+		GridManager->GetGridsByRange(Center, SquareGridSettings->GridShowRange, VisibleGrids);
 		for (int i = 0; i < VisibleGrids.Num(); ++i)
 		{
 			UGrid* Grid = VisibleGrids[i];
@@ -296,13 +317,11 @@ void FEdModeGridEditor::UpdateHexagonSettings()
 	}
 	GridManager->SetGridSize(HexagonGridSettings->GridSize);
 
-	if (HexagonGridSettings->bShowGrids)
+	if (HexagonGridSettings->bShowGrids && GEditor->GetActiveViewport())
 	{
-		FEditorViewportClient* Viewport = (FEditorViewportClient*)GEditor->GetActiveViewport()->GetClient();
+		UGrid* Center = GridManager->GetGridByPosition(HexagonGridSettings->GridCenter);
 
-		UGrid* Center = GridManager->GetGridByPosition(Viewport->GetViewLocation());
-
-		GridManager->GetGridsByRange(Center, GridShowRange, VisibleGrids);
+		GridManager->GetGridsByRange(Center, HexagonGridSettings->GridShowRange, VisibleGrids);
 		for (int i = 0; i < VisibleGrids.Num(); ++i)
 		{
 			UGrid* Grid = VisibleGrids[i];

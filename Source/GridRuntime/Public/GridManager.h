@@ -29,6 +29,9 @@ public:
 	virtual void InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,float gridSize = 100,float TraceDistance = 10000);
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
+	virtual void DeinitializeManager();
+
+	UFUNCTION(BlueprintCallable, Category = "GridManager")
 	virtual void SetGridSize(float NewSize);
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
