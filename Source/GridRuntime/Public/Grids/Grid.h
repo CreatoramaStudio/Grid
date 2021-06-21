@@ -1,10 +1,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridInfo.h"
+#include "Info/GridInfo.h"
 #include "Grid.generated.h"
 
-class UGridManager;
+class UGridSubsystem;
 class UGridPainter;
 
 UENUM(BlueprintType)
@@ -74,7 +74,7 @@ public:
 	UGridInfo* GridInfo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Grid")
-	UGridManager* GridManager;
+	UGridSubsystem* GridManager;
 
 	FIntVector Coord;
 
@@ -83,6 +83,6 @@ protected:
 
 	float GridSize;
 
-	friend class UGridManager;
+	friend class UGridSubsystem;
 	friend class UGridPainter;
 };

@@ -1,12 +1,12 @@
 #include "Util/GridUtilities.h"
 #include "GridRuntimeLog.h"
-#include "GridManager.h"
+#include "Subsystems/GridSubsystem.h"
 #include "Containers/Queue.h"
 
 class FAStar
 {
 public:
-	FAStar(UGrid* _Start, UGrid* _Goal, UGridPathFinder* _PathFinder, bool _Reversed = false)
+	FAStar(UGrid* _Start, UGrid* _Goal, UGridPathfinder* _PathFinder, bool _Reversed = false)
 		: bSuccess(false), Reversed(_Reversed), Start(_Start), Goal(_Goal), PathFinder(_PathFinder)
 	{
 		Comparer.FCost = &FCost;
@@ -109,7 +109,7 @@ private:
 	TMap<UGrid*, UGrid*> CameFrom;
 	UGrid* Start;
 	UGrid* Goal;
-	UGridPathFinder* PathFinder;
+	UGridPathfinder* PathFinder;
 
 	friend class FBidirectionalAStar;
 };
@@ -117,7 +117,7 @@ private:
 class FBidirectionalAStar
 {
 public:
-	FBidirectionalAStar(UGrid* _Start, UGrid* _Goal, UGridPathFinder* _PathFinder)
+	FBidirectionalAStar(UGrid* _Start, UGrid* _Goal, UGridPathfinder* _PathFinder)
 		:bSuccess(false), IntersectGrid(nullptr), ForwardAStar(_Start, _Goal, _PathFinder), BackwardAStar(_Goal, _Start, _PathFinder, true)
 	{}
 
@@ -194,7 +194,7 @@ FVector UGridUtilities::CalcGridDecalSize(const EGridType GridType, const float 
 	}
 }
 
-bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathFinder* PathFinder, TArray<UGrid*>& Result)
+bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathfinder* PathFinder, TArray<UGrid*>& Result)
 {
 	Result.Reset();
 
@@ -253,7 +253,7 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathF
 	return bSuccess;
 }
 
-bool UGridUtilities::GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathFinder* PathFinder, TArray<UGrid*>& Result)
+bool UGridUtilities::GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathfinder* PathFinder, TArray<UGrid*>& Result)
 {
 	Result.Reset();
 

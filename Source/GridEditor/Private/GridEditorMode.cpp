@@ -101,7 +101,7 @@ void FEdModeGridEditor::ActorMoveNotify()
 
 	if (Actor != nullptr && CurrentModeName == FGridEditorCommands::HexagonModeName && HexagonGridSettings->bGridSnap)
 	{
-		UGridManager* GridManager = GetGridManager();
+		UGridSubsystem* GridManager = GetGridManager();
 		UGrid* Grid = GridManager->GetGridByPosition(Actor->GetActorLocation());
 		
 		if (Grid != nullptr)
@@ -145,7 +145,7 @@ void FEdModeGridEditor::SetCurrentMode(FName ModeName)
 {
 	CurrentModeName = ModeName;
 
-	UGridManager* GridManager = GetGridManager();
+	UGridSubsystem* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 	DecalPainter->bIsSquareGrid = CurrentModeName == FGridEditorCommands::SquareModeName;
 
@@ -196,13 +196,13 @@ UWorld* FEdModeGridEditor::GetEditorWorld()
 	return GEditor->GetEditorWorldContext().World();
 }
 
-UGridManager* FEdModeGridEditor::GetGridManager()
+UGridSubsystem* FEdModeGridEditor::GetGridManager()
 {
 	if (CurrentModeName == FGridEditorCommands::SquareModeName)
 	{
 		if (!SquareGridManager)
 		{
-			SquareGridManager = GetEditorWorld()->GetSubsystem<USquareGridManager>();
+			SquareGridManager = GetEditorWorld()->GetSubsystem<USquareGridSubsystem>();
 		}
 		if (!SquareGridManager->IsInitialized())
 		{
@@ -222,7 +222,7 @@ UGridManager* FEdModeGridEditor::GetGridManager()
 	{
 		if (!HexGridManager)
 		{
-			HexGridManager = GetEditorWorld()->GetSubsystem<UHexagonGridManager>();
+			HexGridManager = GetEditorWorld()->GetSubsystem<UHexagonGridSubsystem>();
 		}
 		if (!HexGridManager->IsInitialized())
 		{
@@ -278,7 +278,7 @@ void FEdModeGridEditor::UpdateGridSettings()
 
 void FEdModeGridEditor::UpdateSquareSettings()
 {
-	UGridManager* GridManager = GetGridManager();
+	UGridSubsystem* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 
 	if (DecalPainter != nullptr)
@@ -306,7 +306,7 @@ void FEdModeGridEditor::UpdateSquareSettings()
 
 void FEdModeGridEditor::UpdateHexagonSettings()
 {
-	UGridManager* GridManager = GetGridManager();
+	UGridSubsystem* GridManager = GetGridManager();
 	UGridPainter_Editor* DecalPainter = Cast<UGridPainter_Editor>(GridManager->GetGridPainter());
 
 	if (DecalPainter != nullptr)

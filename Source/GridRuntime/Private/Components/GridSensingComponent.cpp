@@ -1,10 +1,10 @@
 #include "Components/GridSensingComponent.h"
-#include "GridRuntimeLog.h"
-#include "Engine/Engine.h"
+
 #include "EngineUtils.h"
+#include "GridRuntimeLog.h"
 #include "Util/GridUtilities.h"
-#include "GridManager.h"
-#include "Square/SquareGridManager.h"
+#include "Subsystems/GridSubsystem.h"
+#include "Subsystems/SquareGridSubsystem.h"
 #include "TimerManager.h"
 
 UGridSensingComponent::UGridSensingComponent()
@@ -62,7 +62,7 @@ void UGridSensingComponent::GetSensingGrids(TArray<UGrid*>& SensingGrids) const
 	GetSensingGridsInternal(GetGridManager(), SensingGrids);
 }
 
-void UGridSensingComponent::GetSensingGridsInternal(UGridManager* GridManager, TArray<UGrid*>& SensingGrids) const
+void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridManager, TArray<UGrid*>& SensingGrids) const
 {
 	SensingGrids.Reset();
 
@@ -77,7 +77,7 @@ void UGridSensingComponent::GetSensingGridsInternal(UGridManager* GridManager, T
 
 	GetOwner()->GetActorEyesViewPoint(SensorLocation, SensorRotation);
 
-	USquareGridManager* SquareGridMgr = Cast<USquareGridManager>(GridManager);
+	USquareGridSubsystem* SquareGridMgr = Cast<USquareGridSubsystem>(GridManager);
 	if (SquareGridMgr != nullptr)
 	{
 		SquareGridMgr->GetSquareGridsByRange(SquareGridMgr->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids, bDiagonal);
@@ -180,9 +180,9 @@ AController* UGridSensingComponent::GetSensorController() const
 	return nullptr;
 }
 
-UGridManager* UGridSensingComponent::GetGridManager() const
+UGridSubsystem* UGridSensingComponent::GetGridManager() const
 {
-	for (auto GridManager : GetWorld()->GetSubsystemArray<UGridManager>())
+	for (auto GridManager : GetOwner()->GetWorld()->GetSubsystemArray<UGridSubsystem>())
 	{
 		if (GridManager && GridManager->IsInitialized())
 		{
@@ -195,7 +195,7 @@ UGridManager* UGridSensingComponent::GetGridManager() const
 APawn* UGridSensingComponent::GetPawnByGrid(UGrid* Grid) const
 {
 	AActor* Owner = GetOwner();
-	UGridManager* GridManager = GetGridManager();
+	UGridSubsystem* GridManager = GetGridManager();
 
 	if (ensure(GridManager != nullptr))
 	{

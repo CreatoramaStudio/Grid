@@ -3,8 +3,7 @@
 #include "CoreMinimal.h"
 #include "AIController.h"
 #include "Components/ActorComponent.h"
-#include "Components/GridNavigationAgent.h"
-#include "GridPathfindingParams.h"
+#include "GridAgents/GridNavigationAgent.h"
 #include "GridNavigationComponent.generated.h"
 
 class UGrid;

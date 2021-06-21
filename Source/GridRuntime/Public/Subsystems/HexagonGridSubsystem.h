@@ -1,9 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridManager.h"
-#include "Hexagon/HexagonGrid.h"
-#include "HexagonGridManager.generated.h"
+#include "Subsystems/GridSubsystem.h"
+#include "Grids/HexagonGrid.h"
+#include "HexagonGridSubsystem.generated.h"
 
 USTRUCT()
 struct FHexagonGridArray
@@ -38,7 +38,7 @@ struct FHexagonGridArray
  * reference: https://www.redblobgames.com/grids/hexagons/
  */
 UCLASS()
-class GRIDRUNTIME_API UHexagonGridManager : public UGridManager
+class GRIDRUNTIME_API UHexagonGridSubsystem : public UGridSubsystem
 {
 	GENERATED_BODY()
 	

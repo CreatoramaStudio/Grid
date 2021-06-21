@@ -1,7 +1,8 @@
-#include "Components/DefaultGridNavigationAgent.h"
+#include "GridAgents/DefaultGridNavigationAgent.h"
 #include "GridRuntimeLog.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
+#include "Grids/Grid.h"
 
 UDefaultGridNavigationAgent::UDefaultGridNavigationAgent()
 {

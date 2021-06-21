@@ -1,9 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Square/SquareGrid.h"
-#include "GridManager.h"
-#include "SquareGridManager.generated.h"
+#include "Grids/SquareGrid.h"
+#include "Subsystems/GridSubsystem.h"
+#include "SquareGridSubsystem.generated.h"
 
 USTRUCT()
 struct FSquareGridArray
@@ -38,7 +38,7 @@ struct FSquareGridArray
 *
 */
 UCLASS()
-class GRIDRUNTIME_API USquareGridManager : public UGridManager
+class GRIDRUNTIME_API USquareGridSubsystem : public UGridSubsystem
 {
 	GENERATED_BODY()
 

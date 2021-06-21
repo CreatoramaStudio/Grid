@@ -1,6 +1,6 @@
 #include "GridPainter/GridPainter.h"
 #include "Engine/World.h"
-#include "GridManager.h"
+#include "Subsystems/GridSubsystem.h"
 
 UGridPainter::UGridPainter()
 {
@@ -20,7 +20,7 @@ void UGridPainter::PostInitPainter()
 
 }
 
-void UGridPainter::SetGridManager(UGridManager* NewGridManager)
+void UGridPainter::SetGridManager(UGridSubsystem* NewGridManager)
 {
 	GridManager = NewGridManager;
 }

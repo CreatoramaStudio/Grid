@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/LineComponent.h"
-#include "Grid.h"
+#include "Grids/Grid.h"
 #include "PathGuide.generated.h"
 
 /**

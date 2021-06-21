@@ -1,8 +1,8 @@
 #include "Components/GridNavigationComponent.h"
 #include "GridRuntimeLog.h"
-#include "Grid.h"
-#include "GridManager.h"
-#include "Components/DefaultGridNavigationAgent.h"
+#include "Grids/Grid.h"
+#include "Subsystems/GridSubsystem.h"
+#include "GridAgents/DefaultGridNavigationAgent.h"
 #include "Util/GridUtilities.h"
 
 UGridNavigationComponent::UGridNavigationComponent()
@@ -82,7 +82,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 		return false;
 	}
 
-	UGridManager* GridManager = DestGrid->GridManager;
+	UGridSubsystem* GridManager = DestGrid->GridManager;
 
 	if (!ensure(GridManager != nullptr))
 	{
@@ -97,7 +97,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 	Request.Destination = DestGrid;
 	Request.Start = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 
-	UGridPathFinder* PathFinder = GridManager->GetPathFinder();
+	UGridPathfinder* PathFinder = GridManager->GetPathFinder();
 	
 	if (!PathFinder)
 	{
@@ -109,6 +109,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 	if (!UGridUtilities::FindPath(Request, PathFinder, CurrentFollowingPath))
 	{
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, UGridUtilities::FindPath is false, check navigation mesh");
 		return false;
 	}
 
@@ -157,7 +158,7 @@ bool UGridNavigationComponent::MoveToNextGrid()
 		return false;
 	}
 
-	UGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridSubsystem* GridManager = CurrentFollowingPath.Last()->GridManager;
 
 	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];
@@ -182,7 +183,7 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
 		return false;
 
-	UGridManager* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridSubsystem* GridManager = CurrentFollowingPath.Last()->GridManager;
 
 	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];

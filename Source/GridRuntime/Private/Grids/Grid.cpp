@@ -1,5 +1,5 @@
-#include "Grid.h"
-#include "GridManager.h"
+#include "Grids/Grid.h"
+#include "Subsystems/GridSubsystem.h"
 #include "GridPainter/GridPainter.h"
 #include "Components/DecalComponent.h"
 

@@ -1,5 +1,5 @@
-#include "Square/SquareGrid.h"
-#include "GridManager.h"
+#include "Grids/SquareGrid.h"
+#include "Subsystems/GridSubsystem.h"
 
 USquareGrid::USquareGrid()
 {

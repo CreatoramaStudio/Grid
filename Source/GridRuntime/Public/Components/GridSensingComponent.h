@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "GridSensingComponent.generated.h"
 
-class UGridManager;
+class UGridSubsystem;
 class AController;
 class UGrid;
 
@@ -74,11 +74,11 @@ protected:
 
 	AController* GetSensorController() const;
 
-	virtual UGridManager* GetGridManager() const;
+	virtual UGridSubsystem* GetGridManager() const;
 
 	virtual APawn* GetPawnByGrid(UGrid* Grid) const;
 
-	virtual void GetSensingGridsInternal(UGridManager* GridManager, TArray<UGrid*>& SensingGrids) const;
+	virtual void GetSensingGridsInternal(UGridSubsystem* GridManager, TArray<UGrid*>& SensingGrids) const;
 
 protected:
 	FTimerHandle TimerHandle_Sensing;

@@ -1,20 +1,19 @@
-#include "Square/SquareGridManager.h"
-
+#include "Subsystems/SquareGridSubsystem.h"
 #include "GridPainter/GridDecalPainter.h"
 #include "Util/GridUtilities.h"
 
 
-void USquareGridManager::Initialize(FSubsystemCollectionBase& Collection)
+void USquareGridSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 }
 
-void USquareGridManager::Deinitialize()
+void USquareGridSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 }
 
-void USquareGridManager::SetGridSize(const float NewSize)
+void USquareGridSubsystem::SetGridSize(const float NewSize)
 {
 	this->GridSize = NewSize;
 
@@ -28,12 +27,12 @@ void USquareGridManager::SetGridSize(const float NewSize)
 	}
 }
 
-UGrid* USquareGridManager::GetGridByPosition(const FVector& Position)
+UGrid* USquareGridSubsystem::GetGridByPosition(const FVector& Position)
 {
 	return GetSquareGridByPosition(Position);
 }
 
-void USquareGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
+void USquareGridSubsystem::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -46,7 +45,7 @@ void USquareGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>
 	}
 }
 
-void USquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
+void USquareGridSubsystem::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
 {
 	USquareGrid* MinGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Min));
 	USquareGrid* MaxGrid = Cast<USquareGrid>(GetGridByPosition(Bound.Max));
@@ -68,12 +67,12 @@ void USquareGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grid
 	}
 }
 
-void USquareGridManager::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
+void USquareGridSubsystem::GetGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids)
 {
 	GetSquareGridsByRange(Center, Range, Grids, false);
 }
 
-void USquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids, bool bDiagonal)
+void USquareGridSubsystem::GetSquareGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids, bool bDiagonal)
 {
 	Grids.Reset();
 
@@ -110,7 +109,7 @@ void USquareGridManager::GetSquareGridsByRange(UGrid* Center, int Range, TArray<
 	});
 }
 
-void USquareGridManager::ClearAllGridInfo()
+void USquareGridSubsystem::ClearAllGridInfo()
 {
 	for (auto& Elem : GridsPool)
 	{
@@ -128,7 +127,7 @@ void USquareGridManager::ClearAllGridInfo()
 	}
 }
 
-void USquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<USquareGrid*>& Grids)
+void USquareGridSubsystem::GetSquareGridsByCoord(const FIntVector& Coord, TArray<USquareGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -150,7 +149,7 @@ void USquareGridManager::GetSquareGridsByCoord(const FIntVector& Coord, TArray<U
 	}
 }
 
-USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position)
+USquareGrid* USquareGridSubsystem::GetSquareGridByPosition(const FVector& Position)
 {
 	const FIntVector Coord(FMath::RoundToInt(Position.X / GridSize), FMath::RoundToInt(Position.Y / GridSize), 0);
 
@@ -175,7 +174,7 @@ USquareGrid* USquareGridManager::GetSquareGridByPosition(const FVector& Position
 	return Rtn;
 }
 
-void USquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& GridArray)
+void USquareGridSubsystem::CreateGrids(const FIntVector& Coord, FSquareGridArray& GridArray)
 {
 	TArray<FHitResult> HitResults;
 	const FVector Center(Coord.X * GridSize, Coord.Y * GridSize, 0.f);
@@ -208,7 +207,7 @@ void USquareGridManager::CreateGrids(const FIntVector& Coord, FSquareGridArray& 
 	}
 }
 
-USquareGrid* USquareGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
+USquareGrid* USquareGridSubsystem::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	USquareGrid* Grid = NewObject<USquareGrid>(this, USquareGrid::StaticClass());
 	check(Grid != nullptr);

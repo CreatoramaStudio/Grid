@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GridInfo.h"
+#include "Info/GridInfo.h"
 #include "GridInfo_Editor.generated.h"
 
 UCLASS()

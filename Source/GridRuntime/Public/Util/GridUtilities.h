@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Grid.h"
-#include "GridPathfindingParams.h"
+#include "Grids/Grid.h"
+#include "GridPathfinders/GridPathfinder.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GridUtilities.generated.h"
 
-class UGridManager;
+class UGridSubsystem;
 
 /**
  * 
@@ -19,10 +19,10 @@ class GRIDRUNTIME_API UGridUtilities : public UBlueprintFunctionLibrary
 public:
 	/** Grid-based pathfinding */
 	UFUNCTION(BlueprintCallable, Category = "Utilities")
-	static bool FindPath(const FGridPathfindingRequest& Request, UGridPathFinder* PathFinder, TArray<UGrid*>& Result);
+	static bool FindPath(const FGridPathfindingRequest& Request, UGridPathfinder* PathFinder, TArray<UGrid*>& Result);
 
 	UFUNCTION(BlueprintCallable, Category = "Utilities")
-	static bool GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathFinder* PathFinder, TArray<UGrid*>& Result);
+	static bool GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathfinder* PathFinder, TArray<UGrid*>& Result);
 
 	UFUNCTION(BlueprintPure, Category = "Math", meta = (DisplayName = "IntVector - IntVector", CompactNodeTitle = "-", Keywords = "- sub minus"))
 	static FIntVector Subtract_IntVectorIntVector(const FIntVector& L, const FIntVector& R);

@@ -1,4 +1,4 @@
-#include "Components/GridNavigationAgent.h"
+#include "GridAgents/GridNavigationAgent.h"
 
 UGridNavigationAgent::UGridNavigationAgent()
 {

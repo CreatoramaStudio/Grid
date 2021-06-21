@@ -1,5 +1,5 @@
-#include "GridInfo.h"
-#include "GridManager.h"
+#include "Info/GridInfo.h"
+#include "Subsystems/GridSubsystem.h"
 
 UGridInfo::UGridInfo()
 {

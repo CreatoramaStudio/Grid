@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Tickable.h"
-#include "Grid.h"
+#include "Grids/Grid.h"
 #include "GridPainter.generated.h"
 
 /**
@@ -22,7 +22,7 @@ public:
 
 	virtual void PostInitPainter();
 
-	virtual void SetGridManager(UGridManager* NewGridManager);
+	virtual void SetGridManager(UGridSubsystem* NewGridManager);
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,7 +39,7 @@ public:
 	virtual void TickImpl_Implementation(float DeltaTime);
 
 	UPROPERTY(BlueprintReadOnly, Category = "GridPainter")
-	UGridManager* GridManager;
+	UGridSubsystem* GridManager;
 
 	UPROPERTY(BlueprintReadWrite, Category = "GridPainter")
 	TArray<UGrid*> VisibleGrids;

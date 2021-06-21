@@ -2,10 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "GridPathfindingParams.generated.h"
+#include "GridPathfinder.generated.h"
 
 class UGrid;
-class UGridManager;
+class UGridSubsystem;
 
 USTRUCT(BlueprintType)
 struct GRIDRUNTIME_API FGridPathfindingRequest
@@ -42,13 +42,13 @@ public:
 	Inherit from USquarePathFinder or UHexagonPathFinder to customize pathfinding
 */
 UCLASS(Blueprintable)
-class GRIDRUNTIME_API UGridPathFinder : public UObject
+class GRIDRUNTIME_API UGridPathfinder : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	UGridPathFinder();
-	virtual ~UGridPathFinder() override;
+	UGridPathfinder();
+	virtual ~UGridPathfinder() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	UGrid* GetStart() const;
@@ -60,7 +60,7 @@ public:
 	AActor* GetSender() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
-	UGridManager* GetGridManager() const;
+	UGridSubsystem* GetGridManager() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	const FGameplayTagContainer& GetExtraTags() const;
@@ -85,5 +85,5 @@ public:
 	FGridPathfindingRequest Request;
 
 	UPROPERTY()
-	UGridManager* GridManager;
+	UGridSubsystem* GridManager;
 };

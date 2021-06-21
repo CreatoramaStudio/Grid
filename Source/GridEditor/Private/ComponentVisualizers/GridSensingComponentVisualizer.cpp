@@ -1,6 +1,6 @@
 #include "GridSensingComponentVisualizer.h"
 #include "GridEditorMode.h"
-#include "GridManager.h"
+#include "Subsystems/GridSubsystem.h"
 #include "GridInfo_Editor.h"
 #include "Editor.h"
 #include "EditorModeManager.h"

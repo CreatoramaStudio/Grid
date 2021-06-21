@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Grid.h"
+#include "Grids/Grid.h"
 #include "HexagonGrid.generated.h"
 
 /**

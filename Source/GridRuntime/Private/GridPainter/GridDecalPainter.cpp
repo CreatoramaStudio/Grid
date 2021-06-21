@@ -1,6 +1,6 @@
 #include "GridPainter/GridDecalPainter.h"
 #include "Util/GridUtilities.h"
-#include "GridManager.h"
+#include "Subsystems/GridSubsystem.h"
 #include "Components/DecalComponent.h"
 
 UGridDecalPainter::UGridDecalPainter()

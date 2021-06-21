@@ -1,5 +1,5 @@
 #include "GridPainter/GridOutlinePainter.h"
-#include "GridManager.h"
+#include "Subsystems/GridSubsystem.h"
 
 UGridOutlinePainter::UGridOutlinePainter()
 {
@@ -16,7 +16,7 @@ UGridOutlinePainter::~UGridOutlinePainter()
 
 }
 
-void UGridOutlinePainter::SetGridManager(UGridManager* NewGridManager)
+void UGridOutlinePainter::SetGridManager(UGridSubsystem* NewGridManager)
 {
 	Super::SetGridManager(NewGridManager);
 

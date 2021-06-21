@@ -1,5 +1,5 @@
-#include "GridPathfindingParams.h"
-#include "GridManager.h"
+#include "GridPathfinders/GridPathfinder.h"
+#include "Subsystems/GridSubsystem.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 
@@ -11,41 +11,41 @@ FGridPathfindingRequest::FGridPathfindingRequest()
 	Start = Destination = nullptr;
 }
 
-UGridPathFinder::UGridPathFinder()
+UGridPathfinder::UGridPathfinder()
 {
 	GridManager = nullptr;
 }
 
-UGridPathFinder::~UGridPathFinder()
+UGridPathfinder::~UGridPathfinder()
 {
 }
 
-UGrid* UGridPathFinder::GetStart() const
+UGrid* UGridPathfinder::GetStart() const
 {
 	return Request.Start;
 }
 
-UGrid* UGridPathFinder::GetDestination() const
+UGrid* UGridPathfinder::GetDestination() const
 {
 	return Request.Destination;
 }
 
-AActor* UGridPathFinder::GetSender() const
+AActor* UGridPathfinder::GetSender() const
 {
 	return Request.Sender;
 }
 
-UGridManager* UGridPathFinder::GetGridManager() const
+UGridSubsystem* UGridPathfinder::GetGridManager() const
 {
 	return GridManager;
 }
 
-const FGameplayTagContainer& UGridPathFinder::GetExtraTags() const
+const FGameplayTagContainer& UGridPathfinder::GetExtraTags() const
 {
 	return Request.ExtraTags;
 }
 
-bool UGridPathFinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
+bool UGridPathfinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
 {
 	if (UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
 	{
@@ -56,7 +56,7 @@ bool UGridPathFinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
 	return false;
 }
 
-int32 UGridPathFinder::Heuristic_Implementation(UGrid* From, UGrid* To)
+int32 UGridPathfinder::Heuristic_Implementation(UGrid* From, UGrid* To)
 {
 	return GetCost(From, To);
 }

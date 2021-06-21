@@ -5,9 +5,9 @@
 #include "Settings/SquareGridSettings.h"
 #include "Settings/HexagonGridSettings.h"
 
-class UGridManager;
-class UHexagonGridManager;
-class USquareGridManager;
+class UGridSubsystem;
+class UHexagonGridSubsystem;
+class USquareGridSubsystem;
 class UGrid;
 
 class FEdModeGridEditor : public FEdMode
@@ -27,7 +27,7 @@ public:
 
 	virtual void AddReferencedObjects(FReferenceCollector& Collector) override;
 
-	UGridManager* GetGridManager();
+	UGridSubsystem* GetGridManager();
 
 	void SetCurrentMode(FName ModeName);
 	FName GetCurrentMode();
@@ -63,7 +63,7 @@ private:
 
 	TArray<UGrid*> VisibleGrids;
 
-	UHexagonGridManager* HexGridManager;
+	UHexagonGridSubsystem* HexGridManager;
 
-	USquareGridManager* SquareGridManager;
+	USquareGridSubsystem* SquareGridManager;
 };

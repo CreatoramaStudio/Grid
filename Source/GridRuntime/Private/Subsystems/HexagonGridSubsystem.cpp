@@ -1,19 +1,19 @@
-#include "Hexagon/HexagonGridManager.h"
+#include "Subsystems/HexagonGridSubsystem.h"
 #include "GridRuntimeLog.h"
 #include "GridPainter/GridDecalPainter.h"
 #include "Util/GridUtilities.h"
 
-void UHexagonGridManager::Initialize(FSubsystemCollectionBase& Collection)
+void UHexagonGridSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 }
 
-void UHexagonGridManager::Deinitialize()
+void UHexagonGridSubsystem::Deinitialize()
 {
 	Super::Deinitialize();	
 }
 
-void UHexagonGridManager::GetGridsByRange(UGrid* Center, const int Range, TArray<UGrid*>& Grids)
+void UHexagonGridSubsystem::GetGridsByRange(UGrid* Center, const int Range, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -43,7 +43,7 @@ void UHexagonGridManager::GetGridsByRange(UGrid* Center, const int Range, TArray
 	});
 }
 
-void UHexagonGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
+void UHexagonGridSubsystem::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -52,7 +52,7 @@ void UHexagonGridManager::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& Gri
 
 
 
-void UHexagonGridManager::SetGridSize(const float NewSize)
+void UHexagonGridSubsystem::SetGridSize(const float NewSize)
 {
 	this->GridSize = NewSize;
 
@@ -66,7 +66,7 @@ void UHexagonGridManager::SetGridSize(const float NewSize)
 	}
 }
 
-void UHexagonGridManager::ClearAllGridInfo()
+void UHexagonGridSubsystem::ClearAllGridInfo()
 {
 	for (auto& Elem : GridsPool)
 	{
@@ -84,7 +84,7 @@ void UHexagonGridManager::ClearAllGridInfo()
 	}
 }
 
-void UHexagonGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
+void UHexagonGridSubsystem::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -98,7 +98,7 @@ void UHexagonGridManager::GetGridsByCoord(const FIntVector& Coord, TArray<UGrid*
 	}
 }
 
-void UHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray<UHexagonGrid*>& Grids)
+void UHexagonGridSubsystem::GetHexagonGridsByCoord(const FIntVector& Coord, TArray<UHexagonGrid*>& Grids)
 {
 	Grids.Reset();
 
@@ -120,7 +120,7 @@ void UHexagonGridManager::GetHexagonGridsByCoord(const FIntVector& Coord, TArray
 	}
 }
 
-FIntVector UHexagonGridManager::CubeRound(const float _X, const float _Y, const float _Z)
+FIntVector UHexagonGridSubsystem::CubeRound(const float _X, const float _Y, const float _Z)
 {
 	int X = FPlatformMath::RoundToInt(_X);
 	int Y = FPlatformMath::RoundToInt(_Y);
@@ -146,12 +146,12 @@ FIntVector UHexagonGridManager::CubeRound(const float _X, const float _Y, const 
 	return FIntVector(X, Y, Z);
 }
 
-UGrid* UHexagonGridManager::GetGridByPosition(const FVector& Position)
+UGrid* UHexagonGridSubsystem::GetGridByPosition(const FVector& Position)
 {
 	return GetHexagonGridByPosition(Position);
 }
 
-UHexagonGrid* UHexagonGridManager::GetHexagonGridByPosition(const FVector& Position)
+UHexagonGrid* UHexagonGridSubsystem::GetHexagonGridByPosition(const FVector& Position)
 {
 	const float X = (Position.X * FMath::Sqrt(3) / 3 - Position.Y / 3) / GridSize;
 	const float Z = Position.Y * 2 / 3 / GridSize;
@@ -180,7 +180,7 @@ UHexagonGrid* UHexagonGridManager::GetHexagonGridByPosition(const FVector& Posit
 	return Rtn;
 }
 
-void UHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray& GridArray)
+void UHexagonGridSubsystem::CreateGrids(const FIntVector& Coord, FHexagonGridArray& GridArray)
 {
 	TArray<FHitResult> HitResults;
 
@@ -214,7 +214,7 @@ void UHexagonGridManager::CreateGrids(const FIntVector& Coord, FHexagonGridArray
 	}
 }
 
-UHexagonGrid* UHexagonGridManager::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
+UHexagonGrid* UHexagonGridSubsystem::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	UHexagonGrid* Grid = NewObject<UHexagonGrid>(this, UHexagonGrid::StaticClass());
 	check(Grid != nullptr);

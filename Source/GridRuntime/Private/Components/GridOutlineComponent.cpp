@@ -3,8 +3,8 @@
 #include "PrimitiveSceneProxy.h"
 #include "SceneManagement.h"
 #include "GridPainter/GridOutlinePainter.h"
-#include "Square/SquareGridManager.h"
-#include "Hexagon/HexagonGridManager.h"
+#include "Subsystems/SquareGridSubsystem.h"
+#include "Subsystems/HexagonGridSubsystem.h"
 
 const static FName GName_GridOutlineResourceNameForDebugging(TEXT("GridOutline"));
 
@@ -424,11 +424,11 @@ FBoxSphereBounds UGridOutlineComponent::CalcBounds(const FTransform& LocalToWorl
 void UGridOutlineComponent::UpdateGridInfo()
 {
 	UGridOutlinePainter* GridPainter = Cast<UGridOutlinePainter>(GetOuter());
-	UGridManager* GridManager = GridPainter->GridManager;
+	UGridSubsystem* GridManager = GridPainter->GridManager;
 
 	FGridOutlinePrimitiveCompUpdateParams UpdateParams;
 	UpdateParams.SceneProxy = (FGridOutlineSceneProxy*)SceneProxy;
-	UpdateParams.GridType = Cast<USquareGridManager>(GridManager) == nullptr ? EGridType::Hexagon : EGridType::Square;
+	UpdateParams.GridType = Cast<USquareGridSubsystem>(GridManager) == nullptr ? EGridType::Hexagon : EGridType::Square;
 	UpdateParams.GridSize = GridManager->GetGridSize();
 	UpdateParams.Thickness = GridPainter->OutlineThickness;
 	UpdateParams.ZOffset = GridPainter->ZOffset;

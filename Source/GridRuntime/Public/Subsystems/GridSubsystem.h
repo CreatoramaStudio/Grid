@@ -2,18 +2,18 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
-#include "GridPathfindingParams.h"
+#include "GridPathfinders/GridPathfinder.h"
 #include "GridPainter/GridPainter.h"
-#include "Grid.h"
+#include "Grids/Grid.h"
 #include "GridPainter/GridDecalPainter.h"
 
-#include "GridManager.generated.h"
+#include "GridSubsystem.generated.h"
 
 /**
 *
 */
 UCLASS(Abstract)
-class GRIDRUNTIME_API UGridManager : public UWorldSubsystem 
+class GRIDRUNTIME_API UGridSubsystem : public UWorldSubsystem 
 {
 	GENERATED_BODY()
 
@@ -26,7 +26,7 @@ public:
 	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
-	virtual void InitializeManager(TSubclassOf<UGridPathFinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,float gridSize = 100,float TraceDistance = 10000);
+	virtual void InitializeManager(TSubclassOf<UGridPathfinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,float gridSize = 100,float TraceDistance = 10000);
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
 	virtual void DeinitializeManager();
@@ -58,7 +58,7 @@ public:
 	virtual void ClearAllGridInfo();
 
 	UFUNCTION(BlueprintCallable, Category = "GridManager")
-	UGridPathFinder* GetPathFinder() const;
+	UGridPathfinder* GetPathFinder() const;
 
 	UGridPainter* GetGridPainter() const;
 
@@ -70,7 +70,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	// properties
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
-	TSubclassOf<UGridPathFinder> GridPathFinderClass = UGridPathFinder::StaticClass();
+	TSubclassOf<UGridPathfinder> GridPathFinderClass = UGridPathfinder::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridManager")
 	TSubclassOf<UGridInfo> GridInfoClass = UGridInfo::StaticClass();
@@ -94,7 +94,7 @@ protected:
 	UGridPainter* GridPainter;
 
 	UPROPERTY()
-	UGridPathFinder* PathFinder;
+	UGridPathfinder* PathFinder;
 
 #ifdef WITH_EDITOR
 	friend class FEdModeGridEditor;

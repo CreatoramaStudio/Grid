@@ -2,8 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "Grid.h"
-#include "Components/GridNavigationAgent.h"
+#include "GridAgents/GridNavigationAgent.h"
 #include "DefaultGridNavigationAgent.generated.h"
 
 /**
