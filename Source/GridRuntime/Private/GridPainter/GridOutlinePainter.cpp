@@ -16,13 +16,13 @@ UGridOutlinePainter::~UGridOutlinePainter()
 
 }
 
-void UGridOutlinePainter::SetGridManager(UGridSubsystem* NewGridManager)
+void UGridOutlinePainter::SetGridSubsystem(UGridSubsystem* NewGridSubsystem)
 {
-	Super::SetGridManager(NewGridManager);
+	Super::SetGridSubsystem(NewGridSubsystem);
 
 	if (!GridOutlineComp->IsRegistered())
 	{
-		GridOutlineComp->RegisterComponentWithWorld(GridManager->GetWorld());
+		GridOutlineComp->RegisterComponentWithWorld(GridSubsystem->GetWorld());
 	}
 }
 

@@ -30,7 +30,7 @@ public:
 
 	/**
 	*	@note make sure character's "Max Acceleration" large enough for smooth moving
-		@note if PathFinder == null, GridManager's default PathFinder will be used
+		@note if PathFinder == null, GridSubsystem's default PathFinder will be used
 	*/
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
 	virtual bool RequestMove(UGrid* DestGrid);

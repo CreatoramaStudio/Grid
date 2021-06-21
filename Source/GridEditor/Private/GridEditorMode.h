@@ -27,7 +27,7 @@ public:
 
 	virtual void AddReferencedObjects(FReferenceCollector& Collector) override;
 
-	UGridSubsystem* GetGridManager();
+	UGridSubsystem* GetGridSubsystem();
 
 	void SetCurrentMode(FName ModeName);
 	FName GetCurrentMode();
@@ -46,7 +46,7 @@ private:
 
 	UWorld* GetEditorWorld();
 
-	void FreeGridManager();
+	void FreeGridSubsystem();
 	void ClearVisibleGrids();
 
 	void UpdateGridSettings();
@@ -63,7 +63,7 @@ private:
 
 	TArray<UGrid*> VisibleGrids;
 
-	UHexagonGridSubsystem* HexGridManager;
+	UHexagonGridSubsystem* HexGridSubsystem;
 
-	USquareGridSubsystem* SquareGridManager;
+	USquareGridSubsystem* SquareGridSubsystem;
 };

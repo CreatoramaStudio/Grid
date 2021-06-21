@@ -59,16 +59,16 @@ bool UGridSensingComponent::CouldSeePawn(const APawn* Pawn) const
 
 void UGridSensingComponent::GetSensingGrids(TArray<UGrid*>& SensingGrids) const
 {
-	GetSensingGridsInternal(GetGridManager(), SensingGrids);
+	GetSensingGridsInternal(GetGridSubsystem(), SensingGrids);
 }
 
-void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridManager, TArray<UGrid*>& SensingGrids) const
+void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridSubsystem, TArray<UGrid*>& SensingGrids) const
 {
 	SensingGrids.Reset();
 
-	if (GridManager == nullptr)
+	if (GridSubsystem == nullptr)
 	{
-		PrintWarningGridRuntime("UGridSensingComponent::GetSensingGridsInternal GridManager is nullptr.");
+		PrintWarningGridRuntime("UGridSensingComponent::GetSensingGridsInternal GridSubsystem is nullptr.");
 		return;
 	}
 
@@ -77,14 +77,14 @@ void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridManager,
 
 	GetOwner()->GetActorEyesViewPoint(SensorLocation, SensorRotation);
 
-	USquareGridSubsystem* SquareGridMgr = Cast<USquareGridSubsystem>(GridManager);
+	USquareGridSubsystem* SquareGridMgr = Cast<USquareGridSubsystem>(GridSubsystem);
 	if (SquareGridMgr != nullptr)
 	{
 		SquareGridMgr->GetSquareGridsByRange(SquareGridMgr->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids, bDiagonal);
 	}
 	else
 	{
-		GridManager->GetGridsByRange(GridManager->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids);
+		GridSubsystem->GetGridsByRange(GridSubsystem->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids);
 	}
 
 	if (FMath::Abs(VisionAngle - 180.f) <= FLT_EPSILON)
@@ -180,13 +180,13 @@ AController* UGridSensingComponent::GetSensorController() const
 	return nullptr;
 }
 
-UGridSubsystem* UGridSensingComponent::GetGridManager() const
+UGridSubsystem* UGridSensingComponent::GetGridSubsystem() const
 {
-	for (auto GridManager : GetOwner()->GetWorld()->GetSubsystemArray<UGridSubsystem>())
+	for (auto GridSubsystem : GetOwner()->GetWorld()->GetSubsystemArray<UGridSubsystem>())
 	{
-		if (GridManager && GridManager->IsInitialized())
+		if (GridSubsystem && GridSubsystem->IsInitialized())
 		{
-			return GridManager;
+			return GridSubsystem;
 		}
 	}
 	return nullptr;
@@ -195,14 +195,14 @@ UGridSubsystem* UGridSensingComponent::GetGridManager() const
 APawn* UGridSensingComponent::GetPawnByGrid(UGrid* Grid) const
 {
 	AActor* Owner = GetOwner();
-	UGridSubsystem* GridManager = GetGridManager();
+	UGridSubsystem* GridSubsystem = GetGridSubsystem();
 
-	if (ensure(GridManager != nullptr))
+	if (ensure(GridSubsystem != nullptr))
 	{
 		for (TActorIterator<APawn> Iterator(Owner->GetWorld()); Iterator; ++Iterator)
 		{
 			APawn* Pawn = *Iterator;
-			if (Grid->Equal(GridManager->GetGridByPosition(Pawn->GetActorLocation())))
+			if (Grid->Equal(GridSubsystem->GetGridByPosition(Pawn->GetActorLocation())))
 			{
 				return Pawn;
 			}

@@ -60,7 +60,7 @@ public:
 	AActor* GetSender() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
-	UGridSubsystem* GetGridManager() const;
+	UGridSubsystem* GetGridSubsystem() const;
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	const FGameplayTagContainer& GetExtraTags() const;
@@ -85,5 +85,5 @@ public:
 	FGridPathfindingRequest Request;
 
 	UPROPERTY()
-	UGridSubsystem* GridManager;
+	UGridSubsystem* GridSubsystem;
 };

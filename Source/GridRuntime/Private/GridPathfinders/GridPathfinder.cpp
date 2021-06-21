@@ -13,7 +13,7 @@ FGridPathfindingRequest::FGridPathfindingRequest()
 
 UGridPathfinder::UGridPathfinder()
 {
-	GridManager = nullptr;
+	GridSubsystem = nullptr;
 }
 
 UGridPathfinder::~UGridPathfinder()
@@ -35,9 +35,9 @@ AActor* UGridPathfinder::GetSender() const
 	return Request.Sender;
 }
 
-UGridSubsystem* UGridPathfinder::GetGridManager() const
+UGridSubsystem* UGridPathfinder::GetGridSubsystem() const
 {
-	return GridManager;
+	return GridSubsystem;
 }
 
 const FGameplayTagContainer& UGridPathfinder::GetExtraTags() const

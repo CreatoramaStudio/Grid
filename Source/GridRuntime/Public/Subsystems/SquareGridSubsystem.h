@@ -62,13 +62,13 @@ public:
 
 	virtual void ClearAllGridInfo() override;
 
-	UFUNCTION(BlueprintCallable, Category = "SquareGridManager")
+	UFUNCTION(BlueprintCallable, Category = "SquareGridSubsystem")
 	void GetSquareGridsByCoord(const FIntVector& Coord, TArray<USquareGrid*>& Grids);
 
-	UFUNCTION(BlueprintCallable, Category = "SquareGridManager")
+	UFUNCTION(BlueprintCallable, Category = "SquareGridSubsystem")
 	void GetSquareGridsByRange(UGrid* Center, int Range, TArray<UGrid*>& Grids, bool bDiagonal = false);
 
-	UFUNCTION(BlueprintCallable, Category = "SquareGridManager")
+	UFUNCTION(BlueprintCallable, Category = "SquareGridSubsystem")
 	USquareGrid* GetSquareGridByPosition(const FVector& Position);
 
 protected:

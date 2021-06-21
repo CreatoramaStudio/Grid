@@ -45,7 +45,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	virtual bool GetVisibility() const;
 
-	UFUNCTION(BlueprintCallable, Category = "GridManager")
+	UFUNCTION(BlueprintCallable, Category = "GridSubsystem")
 	virtual int GetDistance(const UGrid* Dest) const;
 
 	/**
@@ -74,7 +74,7 @@ public:
 	UGridInfo* GridInfo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Grid")
-	UGridSubsystem* GridManager;
+	UGridSubsystem* GridSubsystem;
 
 	FIntVector Coord;
 

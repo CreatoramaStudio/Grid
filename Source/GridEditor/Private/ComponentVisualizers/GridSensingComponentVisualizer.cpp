@@ -30,7 +30,7 @@ void FGridSensingComponentVisualizer::DrawVisualization(const UActorComponent* C
 
 		if (ensure(GridSensingComp != nullptr))
 		{
-			GridSensingComp->GetSensingGridsInternal(GridEditor->GetGridManager(), SensingGrids);
+			GridSensingComp->GetSensingGridsInternal(GridEditor->GetGridSubsystem(), SensingGrids);
 
 			for (int32 i = 0; i < SensingGrids.Num(); ++i)
 			{

@@ -424,12 +424,12 @@ FBoxSphereBounds UGridOutlineComponent::CalcBounds(const FTransform& LocalToWorl
 void UGridOutlineComponent::UpdateGridInfo()
 {
 	UGridOutlinePainter* GridPainter = Cast<UGridOutlinePainter>(GetOuter());
-	UGridSubsystem* GridManager = GridPainter->GridManager;
+	UGridSubsystem* GridSubsystem = GridPainter->GridSubsystem;
 
 	FGridOutlinePrimitiveCompUpdateParams UpdateParams;
 	UpdateParams.SceneProxy = (FGridOutlineSceneProxy*)SceneProxy;
-	UpdateParams.GridType = Cast<USquareGridSubsystem>(GridManager) == nullptr ? EGridType::Hexagon : EGridType::Square;
-	UpdateParams.GridSize = GridManager->GetGridSize();
+	UpdateParams.GridType = Cast<USquareGridSubsystem>(GridSubsystem) == nullptr ? EGridType::Hexagon : EGridType::Square;
+	UpdateParams.GridSize = GridSubsystem->GetGridSize();
 	UpdateParams.Thickness = GridPainter->OutlineThickness;
 	UpdateParams.ZOffset = GridPainter->ZOffset;
 	GridPainter->GetColorPriority(UpdateParams.ColorPriorities);

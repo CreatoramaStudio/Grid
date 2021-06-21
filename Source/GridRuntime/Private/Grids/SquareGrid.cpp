@@ -24,7 +24,7 @@ void USquareGrid::SetGridSize(float Size)
 
 		Bounds = FBox::BuildAABB(GetCenter(), FVector(GridSize / 2.f)).ExpandBy(FVector::ZeroVector, FVector(0.f, 0.f, GridSize));
 
-		GridManager->GetGridPainter()->UpdateGridState(this);
+		GridSubsystem->GetGridPainter()->UpdateGridState(this);
 	}
 }
 
@@ -51,7 +51,7 @@ void USquareGrid::GetSquareNeighbors(TArray<UGrid*>& Grids, const bool bDiagonal
 
 	for (int i = 0; i < 4; ++i)
 	{
-		GridManager->GetGridsByCoord(Coord + Directions[i], TmpGrids);
+		GridSubsystem->GetGridsByCoord(Coord + Directions[i], TmpGrids);
 
 		Grids.Append(TmpGrids);
 	}
@@ -62,7 +62,7 @@ void USquareGrid::GetSquareNeighbors(TArray<UGrid*>& Grids, const bool bDiagonal
 
 		for (int i = 0; i < 4; ++i)
 		{
-			GridManager->GetGridsByCoord(Coord + DiagonalDirections[i], TmpGrids);
+			GridSubsystem->GetGridsByCoord(Coord + DiagonalDirections[i], TmpGrids);
 
 			Grids.Append(TmpGrids);
 		}

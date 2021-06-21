@@ -47,7 +47,7 @@ void UHexagonGridSubsystem::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& G
 {
 	Grids.Reset();
 
-	PrintErrorGridRuntime("AHexagonGridManager::GetGridsByBound not implement yet");
+	PrintErrorGridRuntime("AHexagonGridSubsystem::GetGridsByBound not implement yet");
 }
 
 
@@ -225,7 +225,7 @@ UHexagonGrid* UHexagonGridSubsystem::CreateGrid(const FIntVector& Coord, const F
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
 	Grid->GridInfo->ParentGrid = Grid;
 	Grid->GridInfo->HitResult = HitResult;
-	Grid->GridManager = this;
+	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 
 	GridPainter->UpdateGridState(Grid);

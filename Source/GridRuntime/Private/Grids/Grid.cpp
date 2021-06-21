@@ -11,7 +11,7 @@ UGrid::UGrid()
 	bVisible = false;
 
 	GridInfo = nullptr;
-	GridManager = nullptr;
+	GridSubsystem = nullptr;
 	GridType = EGridType::Unknown;
 }
 
@@ -29,7 +29,7 @@ void UGrid::SetGridSize(float Size)
 {
 	GridSize = Size;
 
-	GridManager->GetGridPainter()->UpdateGridState(this);
+	GridSubsystem->GetGridPainter()->UpdateGridState(this);
 }
 
 float UGrid::GetGridSize() const
@@ -47,7 +47,7 @@ void UGrid::SetVisibility(const bool bNewVisibility)
 	if (bVisible != bNewVisibility)
 	{
 		bVisible = bNewVisibility;
-		GridManager->GetGridPainter()->UpdateGridState(this);
+		GridSubsystem->GetGridPainter()->UpdateGridState(this);
 	}
 }
 

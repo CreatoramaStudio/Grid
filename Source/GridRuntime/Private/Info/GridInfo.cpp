@@ -19,5 +19,5 @@ void UGridInfo::Clear_Implementation()
 
 void UGridInfo::Dirty()
 {
-	ParentGrid->GridManager->GetGridPainter()->UpdateGridState(ParentGrid);
+	ParentGrid->GridSubsystem->GetGridPainter()->UpdateGridState(ParentGrid);
 }

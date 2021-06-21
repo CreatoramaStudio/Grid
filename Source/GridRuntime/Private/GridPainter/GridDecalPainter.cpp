@@ -42,7 +42,7 @@ void UGridDecalPainter::UpdateDecal(UGrid* Grid)
 	else
 	{
 		DecalComp = NewObject<UDecalComponent>(this);
-		DecalComp->RegisterComponentWithWorld(GridManager->GetWorld());
+		DecalComp->RegisterComponentWithWorld(GridSubsystem->GetWorld());
 		DecalComp->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 		Grid2Decal.Add(Grid, DecalComp);
 	}

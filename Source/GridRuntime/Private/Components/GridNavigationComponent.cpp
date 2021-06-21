@@ -82,11 +82,11 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 		return false;
 	}
 
-	UGridSubsystem* GridManager = DestGrid->GridManager;
+	UGridSubsystem* GridSubsystem = DestGrid->GridSubsystem;
 
-	if (!ensure(GridManager != nullptr))
+	if (!ensure(GridSubsystem != nullptr))
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, GridManager is null");
+		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, GridSubsystem is null");
 		return false;
 	}
 
@@ -95,9 +95,9 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 	Request.Sender = OwnerPawn;
 	Request.Destination = DestGrid;
-	Request.Start = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
+	Request.Start = GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
 
-	UGridPathfinder* PathFinder = GridManager->GetPathFinder();
+	UGridPathfinder* PathFinder = GridSubsystem->GetPathFinder();
 	
 	if (!PathFinder)
 	{
@@ -158,9 +158,9 @@ bool UGridNavigationComponent::MoveToNextGrid()
 		return false;
 	}
 
-	UGridSubsystem* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridSubsystem* GridSubsystem = CurrentFollowingPath.Last()->GridSubsystem;
 
-	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
+	UGrid* CurrGrid = GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];
 
 	CurrentAgent = FindAgent(CurrGrid, NextGrid);
@@ -183,9 +183,9 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
 		return false;
 
-	UGridSubsystem* GridManager = CurrentFollowingPath.Last()->GridManager;
+	UGridSubsystem* GridSubsystem = CurrentFollowingPath.Last()->GridSubsystem;
 
-	UGrid* CurrGrid = GridManager->GetGridByPosition(OwnerPawn->GetActorLocation());
+	UGrid* CurrGrid = GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
 	UGrid* NextGrid = CurrentFollowingPath[FollowingPathIndex];
 
 	UGridNavigationAgent* Agent = FindAgent(CurrGrid, NextGrid);

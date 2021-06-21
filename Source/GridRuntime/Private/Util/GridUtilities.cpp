@@ -217,7 +217,7 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathf
 
 		if (++Step > Request.MaxSearchStep)
 		{
-			PrintWarningGridRuntime("AGridManager::FindPath failed, out of MaxFindStep");
+			PrintWarningGridRuntime("AGridSubsystem::FindPath failed, out of MaxFindStep");
 			break;
 		}
 	}
@@ -266,7 +266,7 @@ bool UGridUtilities::GetReachableGrids(AActor* Sender, int32 MaxCost, UGridPathf
 	TQueue<UGrid*> OpenSet;
 	TSet<UGrid*> CloseSet;
 	TMap<UGrid*, int32> Cost;
-	UGrid* Start = PathFinder->GetGridManager()->GetGridByPosition(Sender->GetActorLocation());
+	UGrid* Start = PathFinder->GetGridSubsystem()->GetGridByPosition(Sender->GetActorLocation());
 
 	OpenSet.Enqueue(Start);
 	Result.Add(Start);
@@ -341,7 +341,7 @@ bool UGridUtilities::GridTraceSingleForObjects(const UGrid* Grid, const float Tr
 	const FVector Start = Grid->GetCenter() + FVector(0.f, 0.f, TraceDistance / 2.f);
 	const FVector End = Grid->GetCenter() - FVector(0.f, 0.f, TraceDistance / 2.f);
 
-	return UKismetSystemLibrary::LineTraceSingleForObjects(Grid->GridManager->GetWorld(), Start, End, ObjectTypes
+	return UKismetSystemLibrary::LineTraceSingleForObjects(Grid->GridSubsystem->GetWorld(), Start, End, ObjectTypes
 		, bTraceComplex, ActorsToIgnore, DrawDebugType, OutHit
 		, bIgnoreSelf, TraceColor, TraceHitColor, DrawTime);
 }

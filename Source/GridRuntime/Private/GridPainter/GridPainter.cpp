@@ -4,7 +4,7 @@
 
 UGridPainter::UGridPainter()
 {
-	GridManager = nullptr;
+	GridSubsystem = nullptr;
 	bIsTickable = true;
 	TickInterval = 0.1f;
 	LastTickTime = 0.f;
@@ -20,17 +20,17 @@ void UGridPainter::PostInitPainter()
 
 }
 
-void UGridPainter::SetGridManager(UGridSubsystem* NewGridManager)
+void UGridPainter::SetGridSubsystem(UGridSubsystem* NewGridSubsystem)
 {
-	GridManager = NewGridManager;
+	GridSubsystem = NewGridSubsystem;
 }
 
 void UGridPainter::Tick(float DeltaTime)
 {
-	if (GridManager == nullptr)
+	if (GridSubsystem == nullptr)
 		return;
 
-	const float WorldTime = GridManager->GetWorld()->GetTimeSeconds();
+	const float WorldTime = GridSubsystem->GetWorld()->GetTimeSeconds();
 
 	if (WorldTime - LastTickTime >= TickInterval)
 	{

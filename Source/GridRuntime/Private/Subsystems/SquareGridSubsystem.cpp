@@ -218,7 +218,7 @@ USquareGrid* USquareGridSubsystem::CreateGrid(const FIntVector& Coord, const FHi
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
 	Grid->GridInfo->HitResult = HitResult;
 	Grid->GridInfo->ParentGrid = Grid;
-	Grid->GridManager = this;
+	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 
 	GridPainter->UpdateGridState(Grid);

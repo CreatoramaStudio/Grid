@@ -33,7 +33,7 @@ void UHexagonGrid::SetGridSize(const float Size)
 
 		Bounds = FBox(Points, 6).ExpandBy(FVector::ZeroVector, FVector(0.f, 0.f, GridSize));
 
-		GridManager->GetGridPainter()->UpdateGridState(this);
+		GridSubsystem->GetGridPainter()->UpdateGridState(this);
 	}
 }
 
@@ -53,7 +53,7 @@ void UHexagonGrid::GetNeighbors_Implementation(TArray<UGrid*>& Grids)
 	for (int i = 0; i < 6; ++i)
 	{
 		TArray<UGrid*> TmpGrids;
-		GridManager->GetGridsByCoord(Coord + Directions[i], TmpGrids);
+		GridSubsystem->GetGridsByCoord(Coord + Directions[i], TmpGrids);
 		Grids.Append(TmpGrids);
 	}
 }

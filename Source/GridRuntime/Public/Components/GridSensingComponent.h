@@ -40,7 +40,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSensingComponent")
 	bool bSkipLineSightTest;
 
-	/** Valid when using SquareGridManager */
+	/** Valid when using SquareGridSubsystem */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSensingComponent")
 	bool bDiagonal;
 
@@ -74,11 +74,11 @@ protected:
 
 	AController* GetSensorController() const;
 
-	virtual UGridSubsystem* GetGridManager() const;
+	virtual UGridSubsystem* GetGridSubsystem() const;
 
 	virtual APawn* GetPawnByGrid(UGrid* Grid) const;
 
-	virtual void GetSensingGridsInternal(UGridSubsystem* GridManager, TArray<UGrid*>& SensingGrids) const;
+	virtual void GetSensingGridsInternal(UGridSubsystem* GridSubsystem, TArray<UGrid*>& SensingGrids) const;
 
 protected:
 	FTimerHandle TimerHandle_Sensing;
