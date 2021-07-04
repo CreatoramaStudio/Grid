@@ -1,5 +1,5 @@
 #include "Components/GridOutlineComponent.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "PrimitiveSceneProxy.h"
 #include "SceneManagement.h"
 #include "GridPainter/GridOutlinePainter.h"
@@ -143,7 +143,7 @@ public:
 		case FSquareEdge::Bottom:
 			return Center + FVector(-HalfGridSize, -HalfGridSize, UpdateParams.ZOffset);
 		default:
-			PrintErrorGridRuntime("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV0 unknown direction");
+			FLogGridRuntime::Error("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV0 unknown direction");
 			return Center;
 		}
 	}
@@ -162,7 +162,7 @@ public:
 		case FSquareEdge::Bottom:
 			return Center + FVector(-HalfGridSize, HalfGridSize, UpdateParams.ZOffset);
 		default:
-			PrintErrorGridRuntime("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV1 unknown direction");
+			FLogGridRuntime::Error("FCompactGridPrimitiveSceneProxy::GetSquareEdgeV1 unknown direction");
 			return Center;
 		}
 	}
@@ -341,7 +341,9 @@ public:
 			const bool bLeftSuccess = UpdateParams.ColorPriorities.Find(L.Color, LIdx);
 			const bool bRightSuccess = UpdateParams.ColorPriorities.Find(R.Color, RIdx);
 			if (!bLeftSuccess || !bRightSuccess)
-				PrintErrorGridRuntime("FGridOutlinePrimitiveSceneProxy::CollectGridOutline Hexagon grid sort failed, can't find grid color in UpdateParams.ColorPriorities");
+			{
+				FLogGridRuntime::Error("FGridOutlinePrimitiveSceneProxy::CollectGridOutline Hexagon grid sort failed, can't find grid color in UpdateParams.ColorPriorities");
+			}
 			return LIdx < RIdx;
 		});
 

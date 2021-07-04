@@ -1,5 +1,5 @@
 #include "GridAgents/DefaultGridNavigationAgent.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
 #include "Grids/Grid.h"
@@ -61,7 +61,7 @@ bool UDefaultGridNavigationAgent::RequestMove_Implementation(APawn* Pawn, UGrid*
 	case EPathFollowingRequestResult::Failed:
 		{
 			const FVector Dest = To->GetCenter();
-			PrintErrorGridRuntime("UDefaultGridNavigationAgent::RequestMove_Implementation failed, Destination is " + Dest.ToString());
+			FLogGridRuntime::Error("UDefaultGridNavigationAgent::RequestMove_Implementation failed, Destination is " + Dest.ToString());
 			break;
 		}
 	default:
@@ -96,7 +96,7 @@ void UDefaultGridNavigationAgent::OnAIControllerMoveCompleted(FAIRequestID Reque
 		}
 	default:
 		{
-			PrintErrorGridRuntime("UDefaultGridNavigationAgent::OnAIControllerMoveCompleted failed, Result: " +  Result);
+			FLogGridRuntime::Error("UDefaultGridNavigationAgent::OnAIControllerMoveCompleted failed, Result: " +  Result);
 		}
 		break;
 	}

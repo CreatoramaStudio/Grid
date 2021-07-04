@@ -1,5 +1,5 @@
 #include "Util/GridUtilities.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "Subsystems/GridSubsystem.h"
 #include "Containers/Queue.h"
 
@@ -189,7 +189,7 @@ FVector UGridUtilities::CalcGridDecalSize(const EGridType GridType, const float 
 			return DecalSize;
 		}
 	default:
-		PrintErrorGridRuntime("UGridUtilities::CalcGridDecalSize unknown grid type");
+		FLogGridRuntime::Error("UGridUtilities::CalcGridDecalSize unknown grid type");
 		return FVector::ZeroVector;
 	}
 }
@@ -217,7 +217,7 @@ bool UGridUtilities::FindPath(const FGridPathfindingRequest& Request, UGridPathf
 
 		if (++Step > Request.MaxSearchStep)
 		{
-			PrintWarningGridRuntime("AGridSubsystem::FindPath failed, out of MaxFindStep");
+			FLogGridRuntime::Warning("AGridSubsystem::FindPath failed, out of MaxFindStep");
 			break;
 		}
 	}

@@ -1,6 +1,6 @@
 #include "Subsystems/GridSubsystem.h"
 
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "GridPainter/GridDecalPainter.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -17,7 +17,7 @@ void UGridSubsystem::InitializeManager(const TSubclassOf<UGridPathfinder> PathFi
 {
 	if (!GridPathFinderClass || !GridInfoClass || !GridPainterClass)
 	{
-		PrintWarningGridRuntime("UGridSubsystem::InitializeManager Class is nullptr");
+		FLogGridRuntime::Warning("UGridSubsystem::InitializeManager Class is nullptr");
 		return;
 	}
 	GridPathFinderClass = PathFinderClass;

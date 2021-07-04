@@ -1,5 +1,5 @@
 #include "Components/GridNavigationComponent.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "Grids/Grid.h"
 #include "Subsystems/GridSubsystem.h"
 #include "GridAgents/DefaultGridNavigationAgent.h"
@@ -43,7 +43,7 @@ void UGridNavigationComponent::BeginPlay()
 		}
 		else
 		{
-			PrintErrorGridRuntime("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
+			FLogGridRuntime::Error("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
 		}
 	}
 	
@@ -53,12 +53,12 @@ void UGridNavigationComponent::BeginPlay()
 		OwnerController = Cast<AAIController>(OwnerPawn->GetController());
 		if(!OwnerController)
 		{
-			PrintWarningGridRuntime("UGridNavigationComponent Cast<AAIController> failed, OwnerController is not AAIController");
+			FLogGridRuntime::Warning("UGridNavigationComponent Cast<AAIController> failed, OwnerController is not AAIController");
 		}
 	}
 	else
 	{
-		PrintWarningGridRuntime("UGridNavigationComponent Cast<APawn> failed, Owner is not APawn");
+		FLogGridRuntime::Warning("UGridNavigationComponent Cast<APawn> failed, Owner is not APawn");
 	}
 }
 
@@ -66,19 +66,19 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 {
 	if (OwnerPawn == nullptr)
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, OwnerPawn is null");
+		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, OwnerPawn is null");
 		return false;
 	}
 
 	if (OwnerController == nullptr)
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, OwnerController is null");
+		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, OwnerController is null");
 		return false;
 	}
 
 	if (DestGrid == nullptr)
 	{
-		PrintWarningGridRuntime("UGridNavigationComponent::RequestMove failed, DestGrid is null");
+		FLogGridRuntime::Warning("UGridNavigationComponent::RequestMove failed, DestGrid is null");
 		return false;
 	}
 
@@ -86,7 +86,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 	if (!ensure(GridSubsystem != nullptr))
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, GridSubsystem is null");
+		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, GridSubsystem is null");
 		return false;
 	}
 
@@ -101,7 +101,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 	
 	if (!PathFinder)
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, PathFinder is null");
+		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, PathFinder is null");
 		return false;
 	}
 	
@@ -109,7 +109,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 	if (!UGridUtilities::FindPath(Request, PathFinder, CurrentFollowingPath))
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::RequestMove failed, UGridUtilities::FindPath is false, check navigation mesh");
+		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, UGridUtilities::FindPath is false, check navigation mesh");
 		return false;
 	}
 
@@ -167,7 +167,7 @@ bool UGridNavigationComponent::MoveToNextGrid()
 
 	if (!CurrentAgent)
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
+		FLogGridRuntime::Error("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
 	}
 
@@ -192,7 +192,7 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	
 	if (!Agent)
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
+		FLogGridRuntime::Error("UGridNavigationComponent::MoveToNextGrid can't find proper agent");
 		return false;
 	}
 
@@ -247,7 +247,7 @@ void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool bSuccess)
 	}
 	else
 	{
-		PrintErrorGridRuntime("UGridNavigationComponent::OnMoveCompleted failed");
+		FLogGridRuntime::Error("UGridNavigationComponent::OnMoveCompleted failed");
 
 		bIsMoving = false;
 	}

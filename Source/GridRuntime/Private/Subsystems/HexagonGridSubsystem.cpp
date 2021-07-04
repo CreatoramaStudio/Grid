@@ -1,5 +1,5 @@
 #include "Subsystems/HexagonGridSubsystem.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "GridPainter/GridDecalPainter.h"
 #include "Util/GridUtilities.h"
 
@@ -47,7 +47,7 @@ void UHexagonGridSubsystem::GetGridsByBound(const FBox& Bound, TArray<UGrid*>& G
 {
 	Grids.Reset();
 
-	PrintErrorGridRuntime("AHexagonGridSubsystem::GetGridsByBound not implement yet");
+	FLogGridRuntime::Error("AHexagonGridSubsystem::GetGridsByBound not implement yet");
 }
 
 

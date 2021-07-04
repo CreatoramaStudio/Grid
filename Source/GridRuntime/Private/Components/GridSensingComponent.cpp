@@ -1,7 +1,7 @@
 #include "Components/GridSensingComponent.h"
 
 #include "EngineUtils.h"
-#include "GridRuntimeLog.h"
+#include "LogGridRuntime.h"
 #include "Util/GridUtilities.h"
 #include "Subsystems/GridSubsystem.h"
 #include "Subsystems/SquareGridSubsystem.h"
@@ -68,7 +68,7 @@ void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridSubsyste
 
 	if (GridSubsystem == nullptr)
 	{
-		PrintWarningGridRuntime("UGridSensingComponent::GetSensingGridsInternal GridSubsystem is nullptr.");
+		FLogGridRuntime::Warning("UGridSensingComponent::GetSensingGridsInternal GridSubsystem is nullptr.");
 		return;
 	}
 
