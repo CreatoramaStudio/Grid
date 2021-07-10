@@ -1,4 +1,6 @@
 #include "GridPathfinders/GridPathfinder.h"
+
+#include "LogGridRuntime.h"
 #include "Subsystems/GridSubsystem.h"
 #include "NavigationSystem.h"
 #include "NavigationPath.h"
@@ -50,9 +52,11 @@ bool UGridPathfinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
 	if (UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(GetWorld()))
 	{
 		UNavigationPath* Path = NavigationSystem->FindPathToLocationSynchronously(GetWorld(),Start->GetCenter(),Dest->GetCenter());
-		bool bResult = !Dest->IsEmpty() && Path && Path->IsValid() && !Path->IsPartial();
+		const bool bResult = !Dest->IsEmpty() && Path && Path->IsValid() && !Path->IsPartial();
 		return bResult;
 	}
+	
+	FLogGridRuntime::Warning("Navigation System not found");
 	return false;
 }
 
