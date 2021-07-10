@@ -26,7 +26,7 @@ public:
 	virtual void Deinitialize() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GridSubsystem")
-	virtual void InitializeManager(TSubclassOf<UGridPathfinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,float gridSize = 100,float TraceDistance = 10000);
+	virtual void InitializeManager(TSubclassOf<UGridPathfinder> PathFinderClass, TSubclassOf<UGridInfo> InfoClass, TSubclassOf<UGridPainter> PainterClass,const float gridSize = 100,const float TraceDistance = 10000);
 
 	UFUNCTION(BlueprintCallable, Category = "GridSubsystem")
 	virtual void DeinitializeManager();
@@ -67,27 +67,26 @@ public:
 
 	void LineTraceTest(const FVector& Center, TArray<FHitResult>& Results) const;
 
+	void SetGridPainter(const TSubclassOf<UGridPainter> PainterClass);
+
 	//////////////////////////////////////////////////////////////////////////
 	// properties
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSubsystem")
 	TSubclassOf<UGridPathfinder> GridPathFinderClass = UGridPathfinder::StaticClass();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSubsystem")
 	TSubclassOf<UGridInfo> GridInfoClass = UGridInfo::StaticClass();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSubsystem")
 	TSubclassOf<UGridPainter> GridPainterClass = UGridDecalPainter::StaticClass();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
 	float TraceTestDistance = 10000;	
 
-	void SetGridPainter(TSubclassOf<UGridPainter> PainterClass);
-
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ExposeOnSpawn=true), Category = "GridSubsystem")
+	UPROPERTY(EditAnywhere, Category = "GridSubsystem")
 	float GridSize = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
 	bool bInitialized = false;
 
 	UPROPERTY()

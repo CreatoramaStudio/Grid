@@ -56,7 +56,7 @@ bool UGridPathfinder::IsReachable_Implementation(UGrid* Start, UGrid* Dest)
 		return bResult;
 	}
 	
-	FLogGridRuntime::Warning("Navigation System not found");
+	FLogGridRuntime::Error("Navigation System not found");
 	return false;
 }
 

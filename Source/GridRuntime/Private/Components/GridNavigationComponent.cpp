@@ -33,7 +33,7 @@ void UGridNavigationComponent::BeginPlay()
 	{
 		UGridNavigationAgent* Agent = NewObject<UGridNavigationAgent>(this, AgentClasses[i]);
 
-		if (Agent != nullptr)
+		if (Agent)
 		{
 			FScriptDelegate Delegate;
 			Delegate.BindUFunction(this, "OnMoveCompleted");
@@ -64,19 +64,19 @@ void UGridNavigationComponent::BeginPlay()
 
 bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 {
-	if (OwnerPawn == nullptr)
+	if (!OwnerPawn)
 	{
 		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, OwnerPawn is null");
 		return false;
 	}
 
-	if (OwnerController == nullptr)
+	if (!OwnerController)
 	{
 		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, OwnerController is null");
 		return false;
 	}
 
-	if (DestGrid == nullptr)
+	if (!DestGrid)
 	{
 		FLogGridRuntime::Warning("UGridNavigationComponent::RequestMove failed, DestGrid is null");
 		return false;
@@ -124,7 +124,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 void UGridNavigationComponent::StopMove()
 {
-	if (CurrentAgent != nullptr)
+	if (CurrentAgent)
 	{
 		CurrentAgent->StopMove();
 		CurrentAgent = nullptr;
@@ -181,8 +181,10 @@ bool UGridNavigationComponent::MoveToNextPoint()
 	++FollowingPathIndex;
 
 	if (FollowingPathIndex >= CurrentFollowingPath.Num())
+	{
 		return false;
-
+	}
+	
 	UGridSubsystem* GridSubsystem = CurrentFollowingPath.Last()->GridSubsystem;
 
 	UGrid* CurrGrid = GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
@@ -202,7 +204,9 @@ bool UGridNavigationComponent::MoveToNextPoint()
 		for (i = FollowingPathIndex; i < CurrentFollowingPath.Num() - 1; ++i)
 		{
 			if (!Agent->Check(OwnerPawn, CurrentFollowingPath[i], CurrentFollowingPath[i + 1]))
+			{
 				break;
+			}
 		}
 
 		FollowingPathIndex = i;
@@ -223,6 +227,7 @@ UGridNavigationAgent* UGridNavigationComponent::FindAgent(UGrid* Start, UGrid* G
 			return Agent;
 		}
 	}
+	FLogGridRuntime::Warning("UGridNavigationComponent::FindAgent Agent not found");
 	return nullptr;
 }
 

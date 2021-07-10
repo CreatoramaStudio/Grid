@@ -13,7 +13,7 @@ void UGridSubsystem::Deinitialize()
 	DeinitializeManager();
 }
 
-void UGridSubsystem::InitializeManager(const TSubclassOf<UGridPathfinder> PathFinderClass, const TSubclassOf<UGridInfo> InfoClass, const TSubclassOf<UGridPainter> PainterClass, float gridSize, float TraceDistance)
+void UGridSubsystem::InitializeManager(const TSubclassOf<UGridPathfinder> PathFinderClass, const TSubclassOf<UGridInfo> InfoClass, const TSubclassOf<UGridPainter> PainterClass, const float gridSize, const float TraceDistance)
 {
 	if (!GridPathFinderClass || !GridInfoClass || !GridPainterClass)
 	{
@@ -50,13 +50,14 @@ void UGridSubsystem::DeinitializeManager()
 	bInitialized = false;
 }
 
-void UGridSubsystem::SetGridPainter(TSubclassOf<UGridPainter> PainterClass)
+void UGridSubsystem::SetGridPainter(const TSubclassOf<UGridPainter> PainterClass)
 {
 	GridPainterClass = PainterClass;
 	
 	if (GridPainter)
 	{
 		GridPainter->ConditionalBeginDestroy();
+		GridPainter = nullptr;
 	}
 
 	GridPainter = NewObject<UGridPainter>(this, GridPainterClass);
