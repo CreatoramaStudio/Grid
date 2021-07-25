@@ -27,8 +27,10 @@ void UGridPainter::SetGridSubsystem(UGridSubsystem* NewGridSubsystem)
 
 void UGridPainter::Tick(float DeltaTime)
 {
-	if (GridSubsystem == nullptr)
+	if (!GridSubsystem)
+	{
 		return;
+	}
 
 	const float WorldTime = GridSubsystem->GetWorld()->GetTimeSeconds();
 
@@ -51,10 +53,12 @@ TStatId UGridPainter::GetStatId() const
 
 void UGridPainter::UpdateGridState_Implementation(UGrid* Grid)
 {
-	check(Grid != nullptr);
+	check(Grid);
 
 	if (Grid->IsEmpty())
+	{
 		return;
+	}
 
 	if (Grid->bVisible)
 	{

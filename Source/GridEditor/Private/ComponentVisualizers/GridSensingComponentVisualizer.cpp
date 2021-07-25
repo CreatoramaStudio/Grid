@@ -19,16 +19,14 @@ void FGridSensingComponentVisualizer::DrawVisualization(const UActorComponent* C
 
 	if (bEnabled && View->Family->EngineShowFlags.VisualizeSenses)
 	{
-		if (GridEditor == nullptr)
+		if (!GridEditor)
 		{
 			FEditorModeTools& Tools = GLevelEditorModeTools();
 			Tools.ActivateMode(EM_GridEditor);
 			return;
 		}
 
-		const UGridSensingComponent* GridSensingComp = Cast<const UGridSensingComponent>(Component);
-
-		if (ensure(GridSensingComp != nullptr))
+		if (const UGridSensingComponent* GridSensingComp = Cast<const UGridSensingComponent>(Component))
 		{
 			GridSensingComp->GetSensingGridsInternal(GridEditor->GetGridSubsystem(), SensingGrids);
 

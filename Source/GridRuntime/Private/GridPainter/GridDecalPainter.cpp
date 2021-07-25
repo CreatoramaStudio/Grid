@@ -15,10 +15,10 @@ UGridDecalPainter::~UGridDecalPainter()
 
 void UGridDecalPainter::TickImpl_Implementation(float DeltaTime)
 {
-	for (int32 i = 0; i < VisibleGrids.Num(); ++i)
-	{
-		UpdateDecal(VisibleGrids[i]);
-	}
+	// for (auto VisibleGrid : VisibleGrids)
+	// {
+	// 	UpdateDecal(VisibleGrid);
+	// }
 }
 
 void UGridDecalPainter::UpdateGridState_Implementation(UGrid* Grid)
@@ -31,7 +31,9 @@ void UGridDecalPainter::UpdateGridState_Implementation(UGrid* Grid)
 void UGridDecalPainter::UpdateDecal(UGrid* Grid)
 {
 	if (!Grid->GridInfo->HitResult.bBlockingHit)
+	{
 		return;
+	}
 
 	UDecalComponent* DecalComp;
 
@@ -51,7 +53,7 @@ void UGridDecalPainter::UpdateDecal(UGrid* Grid)
 
 	DecalComp->SetDecalMaterial(GetDecalMaterial(Grid));
 
-	DecalComp->DecalSize = UGridUtilities::CalcGridDecalSize(Grid->GridType, Grid->GetGridSize()) * 0.98f;
+	DecalComp->DecalSize = UGridUtilities::CalcGridDecalSize(Grid->GridType, Grid->GetGridSize()) * GridDecalSizeOffset;
 
 	DecalComp->SetWorldLocation(Grid->GetCenter());
 }

@@ -14,9 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSeePawnEvent, APawn*, Pawn);
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FSenseTestFunc, APawn*, Pawn, bool&, CouldSense);
 
-/**
-	Owner actor should implement IGridPawnInterface
-*/
+
 UCLASS(ClassGroup = (Grid), Blueprintable, meta = (BlueprintSpawnableComponent))
 class GRIDRUNTIME_API UGridSensingComponent : public UActorComponent
 {
@@ -64,8 +62,6 @@ public:
 	virtual void GetSensingGrids(TArray<UGrid*>& SensingGrids) const;
 
 protected:
-	UFUNCTION()
-	void DefaultSenseTestFunc(APawn* Pawn, bool& CouldSense);
 
 	void SetSensingTimer(float Interval);
 	void OnSensingTimer();

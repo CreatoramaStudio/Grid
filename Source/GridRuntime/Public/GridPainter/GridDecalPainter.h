@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridDecalPainter")
 	UMaterialInterface* DefaultDecalMaterial;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridDecalPainter")
+	float GridDecalSizeOffset = 0.98f;
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridDecalPainter")
 	UMaterialInterface* GetDecalMaterial(UGrid* Grid);
 	virtual UMaterialInterface* GetDecalMaterial_Implementation(UGrid* Grid);

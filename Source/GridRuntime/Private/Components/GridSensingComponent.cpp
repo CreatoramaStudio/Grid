@@ -62,50 +62,6 @@ void UGridSensingComponent::GetSensingGrids(TArray<UGrid*>& SensingGrids) const
 	GetSensingGridsInternal(GetGridSubsystem(), SensingGrids);
 }
 
-void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridSubsystem, TArray<UGrid*>& SensingGrids) const
-{
-	SensingGrids.Reset();
-
-	if (GridSubsystem == nullptr)
-	{
-		FLogGridRuntime::Warning("UGridSensingComponent::GetSensingGridsInternal GridSubsystem is nullptr.");
-		return;
-	}
-
-	FVector SensorLocation;
-	FRotator SensorRotation;
-
-	GetOwner()->GetActorEyesViewPoint(SensorLocation, SensorRotation);
-
-	USquareGridSubsystem* SquareGridMgr = Cast<USquareGridSubsystem>(GridSubsystem);
-	if (SquareGridMgr != nullptr)
-	{
-		SquareGridMgr->GetSquareGridsByRange(SquareGridMgr->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids, bDiagonal);
-	}
-	else
-	{
-		GridSubsystem->GetGridsByRange(GridSubsystem->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids);
-	}
-
-	if (FMath::Abs(VisionAngle - 180.f) <= FLT_EPSILON)
-		return;
-
-	float VisionAngleCosine = FMath::Cos(FMath::DegreesToRadians(VisionAngle));
-	FVector FacingDir = SensorRotation.Vector();
-
-	SensingGrids.RemoveAll([&](UGrid* Grid)
-	{
-		FVector TestLocation(Grid->GetCenter());
-		TestLocation.Z = SensorLocation.Z;
-		return FVector::DotProduct((TestLocation - SensorLocation).GetSafeNormal(), FacingDir) + FLT_EPSILON < VisionAngleCosine;
-	});
-}
-
-void UGridSensingComponent::DefaultSenseTestFunc(APawn* Pawn, bool& CouldSense)
-{
-	CouldSense = true;
-}
-
 void UGridSensingComponent::SetSensingTimer(float Interval)
 {
 	AActor* Owner = GetOwner();
@@ -119,7 +75,9 @@ void UGridSensingComponent::OnSensingTimer()
 {
 	AActor* Owner = GetOwner();
 	if (!IsValid(Owner) || !IsValid(Owner->GetWorld()))
+	{
 		return;
+	}
 
 	UpdateSensing();
 
@@ -137,15 +95,17 @@ void UGridSensingComponent::UpdateSensing()
 
 	GetSensingGrids(SensingGrids);
 
-	for (int32 i = 0; i < SensingGrids.Num(); ++i)
+	for (auto SensingGrid : SensingGrids)
 	{
-		APawn* Pawn = GetPawnByGrid(SensingGrids[i]);
-		if (Pawn != nullptr && Pawn != Owner)
+		APawn* Pawn = GetPawnByGrid(SensingGrid);
+		if (Pawn && Pawn != Owner)
 		{
 			bool CouldSense = false;
 			SenseTestFunc.Execute(Pawn, CouldSense);
 			if (!CouldSense)
+			{
 				continue;
+			}
 
 			if (bSkipLineSightTest)
 			{
@@ -154,18 +114,18 @@ void UGridSensingComponent::UpdateSensing()
 			}
 
 			AController* Controller = GetSensorController();
-			if (Controller != nullptr && Controller->LineOfSightTo(Pawn, FVector::ZeroVector, true))
+			if (Controller && Controller->LineOfSightTo(Pawn, FVector::ZeroVector, true))
 			{
 				SensedPawns.Add(Pawn);
 			}
 		}
 	}
 
-	for (int32 i = 0; i < SensedPawns.Num(); ++i)
+	for (auto SensedPawn : SensedPawns)
 	{
-		if (!OldSenseResult.Contains(SensedPawns[i]))
+		if (!OldSenseResult.Contains(SensedPawn))
 		{
-			OnSeePawn.Broadcast(SensedPawns[i]);
+			OnSeePawn.Broadcast(SensedPawn);
 		}
 	}
 }
@@ -177,18 +137,20 @@ AController* UGridSensingComponent::GetSensorController() const
 	{
 		return Pawn->Controller;
 	}
+	FLogGridRuntime::Warning("UGridSensingComponent::GetSensorController Controller not found");
 	return nullptr;
 }
 
 UGridSubsystem* UGridSensingComponent::GetGridSubsystem() const
 {
-	for (auto GridSubsystem : GetOwner()->GetWorld()->GetSubsystemArray<UGridSubsystem>())
+	for (auto GridSubsystem : GetWorld()->GetSubsystemArray<UGridSubsystem>())
 	{
 		if (GridSubsystem && GridSubsystem->IsInitialized())
 		{
 			return GridSubsystem;
 		}
 	}
+	FLogGridRuntime::Warning("UGridSensingComponent::GetGridSubsystem GridSubsystem not found");
 	return nullptr;
 }
 
@@ -197,7 +159,7 @@ APawn* UGridSensingComponent::GetPawnByGrid(UGrid* Grid) const
 	AActor* Owner = GetOwner();
 	UGridSubsystem* GridSubsystem = GetGridSubsystem();
 
-	if (ensure(GridSubsystem != nullptr))
+	if (ensure(GridSubsystem))
 	{
 		for (TActorIterator<APawn> Iterator(Owner->GetWorld()); Iterator; ++Iterator)
 		{
@@ -208,5 +170,46 @@ APawn* UGridSensingComponent::GetPawnByGrid(UGrid* Grid) const
 			}
 		}
 	}
+	FLogGridRuntime::Warning("UGridSensingComponent::GetPawnByGrid Pawn not found");
 	return nullptr;
+}
+
+void UGridSensingComponent::GetSensingGridsInternal(UGridSubsystem* GridSubsystem, TArray<UGrid*>& SensingGrids) const
+{
+	SensingGrids.Reset();
+
+	if (!GridSubsystem)
+	{
+		FLogGridRuntime::Warning("UGridSensingComponent::GetSensingGridsInternal GridSubsystem is nullptr.");
+		return;
+	}
+
+	FVector SensorLocation;
+	FRotator SensorRotation;
+
+	GetOwner()->GetActorEyesViewPoint(SensorLocation, SensorRotation);
+
+	if (USquareGridSubsystem* SquareGridSubsystem = Cast<USquareGridSubsystem>(GridSubsystem))
+	{
+		SquareGridSubsystem->GetSquareGridsByRange(SquareGridSubsystem->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids, bDiagonal);
+	}
+	else
+	{
+		GridSubsystem->GetGridsByRange(GridSubsystem->GetGridByPosition(SensorLocation), VisionGridRange, SensingGrids);
+	}
+
+	if (FMath::Abs(VisionAngle - 180.f) <= FLT_EPSILON)
+	{
+		return;
+	}
+
+	float VisionAngleCosine = FMath::Cos(FMath::DegreesToRadians(VisionAngle));
+	FVector FacingDir = SensorRotation.Vector();
+
+	SensingGrids.RemoveAll([&](UGrid* Grid)
+	{
+		FVector TestLocation(Grid->GetCenter());
+		TestLocation.Z = SensorLocation.Z;
+		return FVector::DotProduct((TestLocation - SensorLocation).GetSafeNormal(), FacingDir) + FLT_EPSILON < VisionAngleCosine;
+	});
 }
