@@ -7,6 +7,7 @@
 #include "GridNavigationComponent.generated.h"
 
 class UGrid;
+class UGridSubsystem;
 
 UENUM(BlueprintType)
 enum class EGridNavMode : uint8
@@ -27,6 +28,15 @@ public:
 	virtual ~UGridNavigationComponent() override;
 
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
+	virtual UGrid* GetOwnerGridPosition();
+
+	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
+	virtual TArray<UGrid*> GetReachableGridsByRange(const int32 Range);
+
+	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
+	virtual void SetVisibilityInReachableGridsByRange(const bool bNewVisibility,const int32 Range);
 
 	/**
 	*	@note make sure character's "Max Acceleration" large enough for smooth moving
@@ -63,6 +73,8 @@ protected:
 
 	UFUNCTION()
 	virtual void OnMoveCompleted(APawn* Pawn, bool bSuccess);
+
+	virtual UGridSubsystem* GetGridSubsystem() const;
 
 protected:
 	UPROPERTY()

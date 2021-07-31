@@ -62,6 +62,55 @@ void UGridNavigationComponent::BeginPlay()
 	}
 }
 
+UGrid* UGridNavigationComponent::GetOwnerGridPosition()
+{
+	if (!OwnerPawn)
+	{
+		FLogGridRuntime::Error("UGridNavigationComponent::GetOwnerGridPosition failed, OwnerPawn is null");
+		return nullptr;
+	}
+
+	UGridSubsystem* GridSubsystem = GetGridSubsystem();
+	if (!ensure(GridSubsystem != nullptr))
+	{
+		FLogGridRuntime::Error("UGridNavigationComponent::GetOwnerGridPosition failed, GridSubsystem is null");
+		return nullptr;
+	}
+	
+	return GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
+}
+
+TArray<UGrid*> UGridNavigationComponent::GetReachableGridsByRange(const int32 Range)
+{
+	TArray<UGrid*> Grids;
+
+	if (!OwnerPawn)
+	{
+		FLogGridRuntime::Error("UGridNavigationComponent::GetReachableGridsByRange failed, OwnerPawn is null");
+		return Grids;
+	}
+	
+	UGridSubsystem* GridSubsystem = GetGridSubsystem();
+	
+	if (!ensure(GridSubsystem != nullptr))
+	{
+		FLogGridRuntime::Error("UGridNavigationComponent::GetReachableGridsByRange failed, GridSubsystem is null");
+		return Grids;
+	}
+	
+	GridSubsystem->GetPathFinder()->GetReachableGrids(OwnerPawn,Range,Grids);
+
+	return Grids;
+}
+
+void UGridNavigationComponent::SetVisibilityInReachableGridsByRange(const bool bNewVisibility, const int32 Range)
+{
+	for(auto Grid : GetReachableGridsByRange(Range))
+	{
+		Grid->SetVisibility(bNewVisibility);
+	}
+}
+
 bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 {
 	if (!OwnerPawn)
@@ -95,7 +144,7 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 
 	Request.Sender = OwnerPawn;
 	Request.Destination = DestGrid;
-	Request.Start = GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
+	Request.Start = GetOwnerGridPosition();
 
 	UGridPathfinder* PathFinder = GridSubsystem->GetPathFinder();
 	
@@ -106,8 +155,8 @@ bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
 	}
 	
 	PathFinder->Reset();
-
-	if (!UGridUtilities::FindPath(Request, PathFinder, CurrentFollowingPath))
+	
+	if (!PathFinder->FindPath(Request,CurrentFollowingPath))
 	{
 		FLogGridRuntime::Error("UGridNavigationComponent::RequestMove failed, UGridUtilities::FindPath is false, check navigation mesh");
 		return false;
@@ -256,4 +305,17 @@ void UGridNavigationComponent::OnMoveCompleted(APawn* Pawn, bool bSuccess)
 
 		bIsMoving = false;
 	}
+}
+
+UGridSubsystem* UGridNavigationComponent::GetGridSubsystem() const
+{
+	for (auto GridSubsystem : GetWorld()->GetSubsystemArray<UGridSubsystem>())
+	{
+		if (GridSubsystem && GridSubsystem->IsInitialized())
+		{
+			return GridSubsystem;
+		}
+	}
+	FLogGridRuntime::Warning("UGridSensingComponent::GetGridSubsystem GridSubsystem not found");
+	return nullptr;
 }

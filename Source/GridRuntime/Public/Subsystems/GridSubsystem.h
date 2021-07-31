@@ -71,6 +71,14 @@ public:
 
 	//////////////////////////////////////////////////////////////////////////
 	// properties
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
+	float TraceTestDistance = 10000;	
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "GridSubsystem")
+	float GridSize = 100;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSubsystem")
 	TSubclassOf<UGridPathfinder> GridPathFinderClass = UGridPathfinder::StaticClass();
 
@@ -79,13 +87,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GridSubsystem")
 	TSubclassOf<UGridPainter> GridPainterClass = UGridDecalPainter::StaticClass();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GridSubsystem")
-	float TraceTestDistance = 10000;	
-
-protected:
-	UPROPERTY(EditAnywhere, Category = "GridSubsystem")
-	float GridSize = 100;
 
 	bool bInitialized = false;
 

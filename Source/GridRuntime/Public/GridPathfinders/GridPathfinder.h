@@ -65,6 +65,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	const FGameplayTagContainer& GetExtraTags() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Utilities")
+	bool FindPath(const FGridPathfindingRequest& request, TArray<UGrid*>& Result);
+
+	UFUNCTION(BlueprintCallable, Category = "Utilities")
+	bool GetReachableGrids(AActor* Sender,const int32 MaxCost, TArray<UGrid*>& Result);
+
 	/** If return false, the pawn can't move from 'Start' to 'Dest', the path has been blocked, and the cost will be ignore */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridPathFinder")
 	bool IsReachable(UGrid* Start, UGrid* Dest);
