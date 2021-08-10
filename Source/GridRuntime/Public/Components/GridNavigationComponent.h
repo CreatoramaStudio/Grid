@@ -33,10 +33,7 @@ public:
 	virtual UGrid* GetOwnerGridPosition();
 
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
-	virtual TArray<UGrid*> GetReachableGridsByRange(const int32 Range);
-
-	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
-	virtual void SetVisibilityInReachableGridsByRange(const bool bNewVisibility,const int32 Range);
+	virtual void GetReachableGridsByRange(const int32 Range, TArray<UGrid*>& Grids);
 
 	/**
 	*	@note make sure character's "Max Acceleration" large enough for smooth moving

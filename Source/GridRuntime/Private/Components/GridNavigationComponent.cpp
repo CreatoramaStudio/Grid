@@ -78,16 +78,16 @@ UGrid* UGridNavigationComponent::GetOwnerGridPosition()
 	}
 	
 	return GridSubsystem->GetGridByPosition(OwnerPawn->GetActorLocation());
+
 }
 
-TArray<UGrid*> UGridNavigationComponent::GetReachableGridsByRange(const int32 Range)
+void UGridNavigationComponent::GetReachableGridsByRange(const int32 Range, TArray<UGrid*>& Grids)
 {
-	TArray<UGrid*> Grids;
 
 	if (!OwnerPawn)
 	{
 		FLogGridRuntime::Error("UGridNavigationComponent::GetReachableGridsByRange failed, OwnerPawn is null");
-		return Grids;
+		return;
 	}
 	
 	UGridSubsystem* GridSubsystem = GetGridSubsystem();
@@ -95,20 +95,12 @@ TArray<UGrid*> UGridNavigationComponent::GetReachableGridsByRange(const int32 Ra
 	if (!ensure(GridSubsystem != nullptr))
 	{
 		FLogGridRuntime::Error("UGridNavigationComponent::GetReachableGridsByRange failed, GridSubsystem is null");
-		return Grids;
+		return;
 	}
 	
-	GridSubsystem->GetPathFinder()->GetReachableGrids(OwnerPawn,Range,Grids);
+	GridSubsystem->GetPathFinder()->GetReachableGrids(OwnerPawn, Range, Grids);
 
-	return Grids;
-}
-
-void UGridNavigationComponent::SetVisibilityInReachableGridsByRange(const bool bNewVisibility, const int32 Range)
-{
-	for(auto Grid : GetReachableGridsByRange(Range))
-	{
-		Grid->SetVisibility(bNewVisibility);
-	}
+	Grids.Remove(GetOwnerGridPosition());
 }
 
 bool UGridNavigationComponent::RequestMove(UGrid* DestGrid)
