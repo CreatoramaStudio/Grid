@@ -12,8 +12,23 @@ UCLASS()
 class GRIDRUNTIME_API UDefaultGridNavigationAgent : public UGridNavigationAgent
 {
 	GENERATED_BODY()
-	
 public:
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "DefaultGridNavigationAgent")
+	float AcceptanceRadius;
+	
+protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "DefaultGridNavigationAgent")
+	APawn* CurrentPawn;
+
+	UPROPERTY(BlueprintReadOnly, Category = "DefaultGridNavigationAgent")
+	AAIController* CurrentController;
+
+private:
+
+public:
+	
 	UDefaultGridNavigationAgent();
 	virtual ~UDefaultGridNavigationAgent() override;
 
@@ -23,16 +38,10 @@ public:
 
 	virtual void StopMove_Implementation() override;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite, Category = "DefaultGridNavigationAgent")
-	float AcceptanceRadius;
-
 protected:
+
 	UFUNCTION()
 	virtual void OnAIControllerMoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result);
-
-	UPROPERTY()
-	APawn* CurrentPawn;
-
-	UPROPERTY()
-	AAIController* CurrentController;
+	
+private:
 };

@@ -10,10 +10,16 @@ UGridInfo::~UGridInfo()
 
 }
 
+void UGridInfo::BeginPlay_Implementation()
+{
+	
+}
+
 void UGridInfo::Clear_Implementation()
 {
 	HitResult.bBlockingHit = false;
 	GameplayTags.Reset();
+	Guid.Invalidate();
 	Dirty();
 }
 

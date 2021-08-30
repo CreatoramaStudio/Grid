@@ -47,8 +47,25 @@ class GRIDRUNTIME_API UGridPathfinder : public UObject
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridPathFinder")
+	FGridPathfindingRequest CurrentRequest;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridPathFinder")
+	UGridSubsystem* GridSubsystem;
+
+protected:
+
+private:
+
+public:
+
 	UGridPathfinder();
 	virtual ~UGridPathfinder() override;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridPathFinder")
+	void BeginPlay();
+	virtual void BeginPlay_Implementation();
 
 	UFUNCTION(BlueprintCallable, Category = "GridPathFinder")
 	UGrid* GetStart() const;
@@ -66,7 +83,7 @@ public:
 	const FGameplayTagContainer& GetExtraTags() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Utilities")
-	bool FindPath(const FGridPathfindingRequest& request, TArray<UGrid*>& Result);
+	bool FindPath(const FGridPathfindingRequest& Request, TArray<UGrid*>& Result);
 
 	UFUNCTION(BlueprintCallable, Category = "Utilities")
 	bool GetReachableGrids(AActor* Sender,const int32 MaxCost, TArray<UGrid*>& Result);
@@ -88,8 +105,9 @@ public:
 	void Reset();
 	virtual void Reset_Implementation() {};
 
-	FGridPathfindingRequest Request;
+protected:
 
-	UPROPERTY()
-	UGridSubsystem* GridSubsystem;
+private:
+	
+
 };

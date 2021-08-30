@@ -20,6 +20,11 @@ void UGridPainter::PostInitPainter()
 
 }
 
+void UGridPainter::BeginPlay_Implementation()
+{
+	
+}
+
 void UGridPainter::SetGridSubsystem(UGridSubsystem* NewGridSubsystem)
 {
 	GridSubsystem = NewGridSubsystem;

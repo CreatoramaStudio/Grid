@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Grids/Grid.h"
-#include "GridPathfinders/GridPathfinder.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "GridUtilities.generated.h"
 
@@ -39,7 +38,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GridUtilities")
 	static void GetBoundsByGridArray(const TArray<UGrid*>& Grids, FBoxSphereBounds& Bounds);
 
-	static uint64 GetUniqueIdByCoordinate(const FIntVector& Coord);
+	static uint64 GetGridUniqueIdByCoordinate(const FIntVector& Coord);
+
+	static uint64 GetGridUniqueId(const UGrid* Grid);
+
+	UFUNCTION(BlueprintPure, Category = "GridUtilities")
+	static FString GetGridUniqueIdString(const UGrid* Grid);
 
 	static FVector CalcGridDecalSize(EGridType GridType, float GridSize);
 };

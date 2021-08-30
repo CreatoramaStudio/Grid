@@ -18,8 +18,22 @@ class GRIDRUNTIME_API UGridNavigationAgent : public UObject
 	GENERATED_BODY()
 	
 public:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "GridNavigationAgent")
+	FGridNavAgentEvent OnMoveCompleted;
+
+protected:
+
+private:
+
+public:
+
 	UGridNavigationAgent();
 	virtual ~UGridNavigationAgent() override;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridPainter")
+	void BeginPlay();
+	virtual void BeginPlay_Implementation();
 
 	/** check if this agent can process this move */
 	UFUNCTION(BlueprintNativeEvent, Category = "GridNavigationAgent")
@@ -35,6 +49,7 @@ public:
 	void StopMove();
 	virtual void StopMove_Implementation();
 
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "GridNavigationAgent")
-	FGridNavAgentEvent OnMoveCompleted;
+protected:
+
+private:
 };

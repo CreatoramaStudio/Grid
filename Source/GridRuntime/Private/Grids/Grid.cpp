@@ -20,6 +20,11 @@ UGrid::~UGrid()
 
 }
 
+void UGrid::BeginPlay_Implementation()
+{
+	
+}
+
 FVector UGrid::GetCenter() const
 {
 	return FVector::ZeroVector;

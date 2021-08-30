@@ -23,7 +23,46 @@ class GRIDRUNTIME_API UGridNavigationComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
+
+	UPROPERTY(BlueprintAssignable, Category = "GridNavigationComponent")
+	FGridNavEventSignature OnArrivalNewGrid;
+
+	UPROPERTY(BlueprintAssignable, Category = "GridNavigationComponent")
+	FGridNavEventSignature OnArrivalGoal;
+
+	/** if you implement a new GridNavigationAgent, add that class to this Array */
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, Category = "GridNavigationComponent")
+	TArray<TSubclassOf<UGridNavigationAgent>> AgentClasses;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridNavigationComponent")
+	EGridNavMode NavMode;
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridNavigationComponent")
+	APawn* OwnerPawn;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridNavigationComponent")
+	AAIController* OwnerController;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridNavigationComponent")
+	TArray<UGrid*> CurrentFollowingPath;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridNavigationComponent")
+	TArray<UGridNavigationAgent*> Agents;
+
+	UPROPERTY(BlueprintReadOnly, Category = "GridNavigationComponent")
+	UGridNavigationAgent* CurrentAgent;
+
+	int FollowingPathIndex;
+
+	bool bIsMoving;
+	
+private:
+
+public:
+
 	UGridNavigationComponent();
 	virtual ~UGridNavigationComponent() override;
 
@@ -37,7 +76,7 @@ public:
 
 	/**
 	*	@note make sure character's "Max Acceleration" large enough for smooth moving
-		@note if PathFinder == null, GridSubsystem's default PathFinder will be used
+	@note if PathFinder == null, GridSubsystem's default PathFinder will be used
 	*/
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
 	virtual bool RequestMove(UGrid* DestGrid);
@@ -48,20 +87,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GridNavigationComponent")
 	virtual bool IsMoving() const;
 
-	UPROPERTY(BlueprintAssignable, Category = "GridNavigationComponent")
-	FGridNavEventSignature OnArrivalNewGrid;
-
-	UPROPERTY(BlueprintAssignable, Category = "GridNavigationComponent")
-	FGridNavEventSignature OnArrivalGoal;
-
-	/** if you implement a new GridNavigationAgent, add that class to this Array */
-	UPROPERTY(EditDefaultsOnly, Category = "Grid")
-	TArray<TSubclassOf<UGridNavigationAgent>> AgentClasses;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridNavigationComponent")
-	EGridNavMode NavMode;
-
 protected:
+
 	bool MoveToNext();
 	virtual bool MoveToNextGrid();
 	virtual bool MoveToNextPoint();
@@ -73,23 +100,5 @@ protected:
 
 	virtual UGridSubsystem* GetGridSubsystem() const;
 
-protected:
-	UPROPERTY()
-	APawn* OwnerPawn;
-
-	UPROPERTY()
-	AAIController* OwnerController;
-
-	int FollowingPathIndex;
-
-	bool bIsMoving;
-
-	UPROPERTY()
-	TArray<UGrid*> CurrentFollowingPath;
-
-	UPROPERTY()
-	TArray<UGridNavigationAgent*> Agents;
-
-	UPROPERTY()
-	UGridNavigationAgent* CurrentAgent;
+private:
 };

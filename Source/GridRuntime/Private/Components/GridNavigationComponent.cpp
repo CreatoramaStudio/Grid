@@ -28,24 +28,6 @@ UGridNavigationComponent::~UGridNavigationComponent()
 void UGridNavigationComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	for (int i = 0; i < AgentClasses.Num(); ++i)
-	{
-		UGridNavigationAgent* Agent = NewObject<UGridNavigationAgent>(this, AgentClasses[i]);
-
-		if (Agent)
-		{
-			FScriptDelegate Delegate;
-			Delegate.BindUFunction(this, "OnMoveCompleted");
-
-			Agent->OnMoveCompleted.Add(Delegate);
-			Agents.Add(Agent);
-		}
-		else
-		{
-			FLogGridRuntime::Error("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
-		}
-	}
 	
 	OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn)
@@ -59,6 +41,23 @@ void UGridNavigationComponent::BeginPlay()
 	else
 	{
 		FLogGridRuntime::Warning("UGridNavigationComponent Cast<APawn> failed, Owner is not APawn");
+	}
+
+	for(auto AgentClass : AgentClasses)
+	{
+		if (UGridNavigationAgent* Agent = NewObject<UGridNavigationAgent>(this, AgentClass))
+		{
+			FScriptDelegate Delegate;
+			Delegate.BindUFunction(this, "OnMoveCompleted");
+
+			Agent->OnMoveCompleted.Add(Delegate);
+			Agents.Add(Agent);
+			Agent->BeginPlay();
+		}
+		else
+		{
+			FLogGridRuntime::Error("UGridNavigationComponent::BeginPlay create grid navigation agent failed!");
+		}
 	}
 }
 

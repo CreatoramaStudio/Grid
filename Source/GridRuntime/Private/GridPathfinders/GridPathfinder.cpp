@@ -25,19 +25,24 @@ UGridPathfinder::~UGridPathfinder()
 {
 }
 
+void UGridPathfinder::BeginPlay_Implementation()
+{
+	
+}
+
 UGrid* UGridPathfinder::GetStart() const
 {
-	return Request.Start;
+	return CurrentRequest.Start;
 }
 
 UGrid* UGridPathfinder::GetDestination() const
 {
-	return Request.Destination;
+	return CurrentRequest.Destination;
 }
 
 AActor* UGridPathfinder::GetSender() const
 {
-	return Request.Sender;
+	return CurrentRequest.Sender;
 }
 
 UGridSubsystem* UGridPathfinder::GetGridSubsystem() const
@@ -47,19 +52,19 @@ UGridSubsystem* UGridPathfinder::GetGridSubsystem() const
 
 const FGameplayTagContainer& UGridPathfinder::GetExtraTags() const
 {
-	return Request.ExtraTags;
+	return CurrentRequest.ExtraTags;
 }
 
-bool UGridPathfinder::FindPath(const FGridPathfindingRequest& request, TArray<UGrid*>& Result)
+bool UGridPathfinder::FindPath(const FGridPathfindingRequest& Request, TArray<UGrid*>& Result)
 {
 	Result.Reset();
 
 	bool bSuccess = false;
 
-	Request = request;
+	CurrentRequest = Request;
 
-	UGrid* Start = Request.Start;
-	UGrid* Goal = Request.Destination;
+	UGrid* Start = CurrentRequest.Start;
+	UGrid* Goal = CurrentRequest.Destination;
 
 	FBidirectionalAStar BidirectionalAStar(Start, Goal, this);
 
@@ -73,7 +78,7 @@ bool UGridPathfinder::FindPath(const FGridPathfindingRequest& request, TArray<UG
 
 		bSuccess = BidirectionalAStar.bSuccess;
 
-		if (++Step > Request.MaxSearchStep)
+		if (++Step > CurrentRequest.MaxSearchStep)
 		{
 			FLogGridRuntime::Warning("AGridSubsystem::FindPath failed, out of MaxFindStep");
 			break;
@@ -84,12 +89,12 @@ bool UGridPathfinder::FindPath(const FGridPathfindingRequest& request, TArray<UG
 	{
 		BidirectionalAStar.CollectPath(Result);
 
-		if (Request.bRemoveDest)
+		if (CurrentRequest.bRemoveDest)
 		{
 			Result.Pop();
 		}
 
-		if (Request.MaxCost >= 0)
+		if (CurrentRequest.MaxCost >= 0)
 		{
 			int32 Cost = 0;
 			int32 i;
@@ -97,7 +102,7 @@ bool UGridPathfinder::FindPath(const FGridPathfindingRequest& request, TArray<UG
 			{
 				Cost += GetCost(Result[i - 1], Result[i]);
 
-				if (Cost > Request.MaxCost)
+				if (Cost > CurrentRequest.MaxCost)
 				{
 					break;
 				}
@@ -122,8 +127,8 @@ bool UGridPathfinder::GetReachableGrids(AActor* Sender, const int32 MaxCost, TAr
 		return false;
 	}
 
-	Request.Sender = Sender;
-	Request.MaxCost = MaxCost;
+	CurrentRequest.Sender = Sender;
+	CurrentRequest.MaxCost = MaxCost;
 
 	TQueue<UGrid*> OpenSet;
 	TSet<UGrid*> CloseSet;
@@ -149,7 +154,7 @@ bool UGridPathfinder::GetReachableGrids(AActor* Sender, const int32 MaxCost, TAr
 		{
 			UGrid* Next = Neighbors[i];
 
-			Request.Destination = Next;
+			CurrentRequest.Destination = Next;
 
 			if (CloseSet.Contains(Next) || !IsReachable(Current, Next))
 			{

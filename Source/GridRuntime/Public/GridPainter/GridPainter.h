@@ -11,16 +11,43 @@
    Inherit from this class to customize grid rendering
  */
 UCLASS(Blueprintable, abstract)
-class GRIDRUNTIME_API UGridPainter : public UObject
-									,public FTickableGameObject
+class GRIDRUNTIME_API UGridPainter : public UObject,public FTickableGameObject
 {
 	GENERATED_BODY()
-	
+
 public:
+	
+	UPROPERTY(BlueprintReadOnly, Category = "GridPainter")
+	UGridSubsystem* GridSubsystem;
+
+	UPROPERTY(BlueprintReadWrite, Category = "GridPainter")
+	TArray<UGrid*> VisibleGrids;
+
+protected:
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridPainter")
+	bool bIsTickable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridPainter")
+	float TickInterval;
+
+	float LastTickTime;
+
+	TStatId StatId;
+
+private:
+
+public:
+
 	UGridPainter();
 	virtual ~UGridPainter() override;
 
 	virtual void PostInitPainter();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "GridPainter")
+	void BeginPlay();
+	virtual void BeginPlay_Implementation();
+	
 
 	virtual void SetGridSubsystem(UGridSubsystem* NewGridSubsystem);
 
@@ -38,20 +65,7 @@ public:
 	void TickImpl(float DeltaTime);
 	virtual void TickImpl_Implementation(float DeltaTime);
 
-	UPROPERTY(BlueprintReadOnly, Category = "GridPainter")
-	UGridSubsystem* GridSubsystem;
-
-	UPROPERTY(BlueprintReadWrite, Category = "GridPainter")
-	TArray<UGrid*> VisibleGrids;
-
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridPainter")
-	bool bIsTickable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "GridPainter")
-	float TickInterval;
-
-	float LastTickTime;
-
-	TStatId StatId;
+private:
 };

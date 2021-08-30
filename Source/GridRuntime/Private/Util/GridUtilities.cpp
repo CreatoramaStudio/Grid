@@ -3,9 +3,19 @@
 #include "Subsystems/GridSubsystem.h"
 
 
-uint64 UGridUtilities::GetUniqueIdByCoordinate(const FIntVector& Coord)
+uint64 UGridUtilities::GetGridUniqueIdByCoordinate(const FIntVector& Coord)
 {
 	return ((uint64)Coord.Z << 44) + ((uint64)Coord.Y << 22) + (uint64)Coord.X;
+}
+
+uint64 UGridUtilities::GetGridUniqueId(const UGrid* Grid)
+{
+	return GetGridUniqueIdByCoordinate(Grid->Coord);
+}
+
+FString UGridUtilities::GetGridUniqueIdString(const UGrid* Grid)
+{
+	return FString::Printf(TEXT("%llu"), GetGridUniqueId(Grid));
 }
 
 FVector UGridUtilities::CalcGridDecalSize(const EGridType GridType, const float GridSize)

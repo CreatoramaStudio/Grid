@@ -9,6 +9,10 @@ UGridNavigationAgent::~UGridNavigationAgent()
 {
 }
 
+void UGridNavigationAgent::BeginPlay_Implementation()
+{
+}
+
 bool UGridNavigationAgent::Check_Implementation(APawn* Pawn, UGrid* From, UGrid* To)
 {
 	return false;

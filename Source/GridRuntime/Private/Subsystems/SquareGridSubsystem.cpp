@@ -117,9 +117,7 @@ void USquareGridSubsystem::ClearAllGridInfo()
 
 		for (int i = 0; i< GridArray.Num(); ++i)
 		{
-			UGridInfo* GridInfo = GridArray[i]->GridInfo;
-
-			if (GridInfo != nullptr)
+			if (UGridInfo* GridInfo = GridArray[i]->GridInfo)
 			{
 				GridInfo->Clear();
 			}
@@ -131,7 +129,7 @@ void USquareGridSubsystem::GetSquareGridsByCoord(const FIntVector& Coord, TArray
 {
 	Grids.Reset();
 
-	const uint64 GridUniqueId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
+	const uint64 GridUniqueId = UGridUtilities::GetGridUniqueIdByCoordinate(Coord);
 
 	FSquareGridArray GridArray;
 	if (GridsPool.Contains(GridUniqueId))
@@ -210,7 +208,7 @@ void USquareGridSubsystem::CreateGrids(const FIntVector& Coord, FSquareGridArray
 USquareGrid* USquareGridSubsystem::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	USquareGrid* Grid = NewObject<USquareGrid>(this, USquareGrid::StaticClass());
-	check(Grid != nullptr);
+	check(Grid);
 
 	Grid->GridType = EGridType::Square;
 	Grid->Coord = Coord;
@@ -218,10 +216,13 @@ USquareGrid* USquareGridSubsystem::CreateGrid(const FIntVector& Coord, const FHi
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
 	Grid->GridInfo->HitResult = HitResult;
 	Grid->GridInfo->ParentGrid = Grid;
+	Grid->GridInfo->Guid = FGuid::NewGuid();
 	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 
 	GridPainter->UpdateGridState(Grid);
 
+	Grid->BeginPlay();
+	Grid->GridInfo->BeginPlay();
 	return Grid;
 }

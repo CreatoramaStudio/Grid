@@ -74,9 +74,7 @@ void UHexagonGridSubsystem::ClearAllGridInfo()
 
 		for (int i = 0; i < GridArray.Num(); ++i)
 		{
-			UGridInfo* GridInfo = GridArray[i]->GridInfo;
-
-			if (GridInfo != nullptr)
+			if (UGridInfo* GridInfo = GridArray[i]->GridInfo)
 			{
 				GridInfo->Clear();
 			}
@@ -104,7 +102,7 @@ void UHexagonGridSubsystem::GetHexagonGridsByCoord(const FIntVector& Coord, TArr
 
 	check(Coord.X + Coord.Y + Coord.Z == 0);
 
-	const uint64 GridId = UGridUtilities::GetUniqueIdByCoordinate(Coord);
+	const uint64 GridId = UGridUtilities::GetGridUniqueIdByCoordinate(Coord);
 
 	FHexagonGridArray GridArray;
 	if (GridsPool.Contains(GridId))
@@ -217,7 +215,7 @@ void UHexagonGridSubsystem::CreateGrids(const FIntVector& Coord, FHexagonGridArr
 UHexagonGrid* UHexagonGridSubsystem::CreateGrid(const FIntVector& Coord, const FHitResult& HitResult)
 {
 	UHexagonGrid* Grid = NewObject<UHexagonGrid>(this, UHexagonGrid::StaticClass());
-	check(Grid != nullptr);
+	check(Grid);
 
 	Grid->GridType = EGridType::Hexagon;
 	Grid->Coord = Coord;
@@ -225,10 +223,13 @@ UHexagonGrid* UHexagonGridSubsystem::CreateGrid(const FIntVector& Coord, const F
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
 	Grid->GridInfo->ParentGrid = Grid;
 	Grid->GridInfo->HitResult = HitResult;
+	Grid->GridInfo->Guid = FGuid::NewGuid();
 	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 
 	GridPainter->UpdateGridState(Grid);
 
+	Grid->BeginPlay();
+	Grid->GridInfo->BeginPlay();
 	return Grid;
 }

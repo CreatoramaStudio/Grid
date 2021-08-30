@@ -31,6 +31,8 @@ void UGridSubsystem::InitializeManager(const TSubclassOf<UGridPathfinder> PathFi
 	PathFinder = NewObject<UGridPathfinder>(this, GridPathFinderClass);
 	PathFinder->GridSubsystem = this;
 
+	PathFinder->BeginPlay();
+
 	bInitialized = true;
 }
 
@@ -61,9 +63,10 @@ void UGridSubsystem::SetGridPainter(const TSubclassOf<UGridPainter> PainterClass
 	}
 
 	GridPainter = NewObject<UGridPainter>(this, GridPainterClass);
-	check(GridPainter != nullptr);
+	check(GridPainter);
 	GridPainter->PostInitPainter();
 	GridPainter->SetGridSubsystem(this);
+	GridPainter->BeginPlay();
 }
 
 UGridPainter* UGridSubsystem::GetGridPainter() const
