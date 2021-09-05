@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Object/BaseObject.h"
 #include "UObject/NoExportTypes.h"
 #include "GridNavigationAgent.generated.h"
 
@@ -13,7 +14,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGridNavAgentEvent, APawn*, Pawn, b
    inherit from this class to implement special movement(jump, climb, etc)
  */
 UCLASS(Blueprintable, abstract)
-class GRIDRUNTIME_API UGridNavigationAgent : public UObject
+class GRIDRUNTIME_API UGridNavigationAgent : public UBaseObject
 {
 	GENERATED_BODY()
 	

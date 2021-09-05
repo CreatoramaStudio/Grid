@@ -4,6 +4,7 @@
 #include "UObject/NoExportTypes.h"
 #include "Tickable.h"
 #include "Grids/Grid.h"
+#include "Object/BaseObject.h"
 #include "GridPainter.generated.h"
 
 /**
@@ -11,7 +12,7 @@
    Inherit from this class to customize grid rendering
  */
 UCLASS(Blueprintable, abstract)
-class GRIDRUNTIME_API UGridPainter : public UObject,public FTickableGameObject
+class GRIDRUNTIME_API UGridPainter : public UBaseObject,public FTickableGameObject
 {
 	GENERATED_BODY()
 

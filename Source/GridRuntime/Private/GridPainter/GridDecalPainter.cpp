@@ -30,7 +30,7 @@ void UGridDecalPainter::UpdateGridState_Implementation(UGrid* Grid)
 
 void UGridDecalPainter::UpdateDecal(UGrid* Grid)
 {
-	if (!Grid->GridInfo->HitResult.bBlockingHit)
+	if (!Grid->GridInfo->GetHitResult().bBlockingHit)
 	{
 		return;
 	}

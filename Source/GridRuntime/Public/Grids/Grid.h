@@ -15,15 +15,20 @@ enum class EGridType : uint8
 	Hexagon
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnVisibilityChanged,bool,bVisible);
+
 /**
 *
 */
 UCLASS(Transient, Blueprintable)
-class GRIDRUNTIME_API UGrid : public UObject
+class GRIDRUNTIME_API UGrid : public UBaseObject
 {
 	GENERATED_BODY()
 
 public:
+
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Grid")
+	FOnVisibilityChanged OnVisibilityChanged;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	EGridType GridType;

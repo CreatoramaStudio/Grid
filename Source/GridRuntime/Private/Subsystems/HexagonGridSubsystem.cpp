@@ -221,9 +221,7 @@ UHexagonGrid* UHexagonGridSubsystem::CreateGrid(const FIntVector& Coord, const F
 	Grid->Coord = Coord;
 	Grid->Height = HitResult.ImpactPoint.Z;
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
-	Grid->GridInfo->ParentGrid = Grid;
-	Grid->GridInfo->HitResult = HitResult;
-	Grid->GridInfo->Guid = FGuid::NewGuid();
+	Grid->GridInfo->Initialize(HitResult,Grid);
 	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 

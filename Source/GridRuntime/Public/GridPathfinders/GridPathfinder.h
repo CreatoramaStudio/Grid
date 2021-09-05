@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Object/BaseObject.h"
 #include "GridPathfinder.generated.h"
 
 class UGrid;
@@ -42,7 +43,7 @@ public:
 	Inherit from USquarePathFinder or UHexagonPathFinder to customize pathfinding
 */
 UCLASS(Blueprintable)
-class GRIDRUNTIME_API UGridPathfinder : public UObject
+class GRIDRUNTIME_API UGridPathfinder : public UBaseObject
 {
 	GENERATED_BODY()
 

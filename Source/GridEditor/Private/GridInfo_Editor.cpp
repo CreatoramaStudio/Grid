@@ -15,13 +15,13 @@ void UGridInfo_Editor::SetShowNormal(bool bNewShowNormal)
 {
 	bShowNormal = bNewShowNormal;
 
-	Dirty();
+	PropertiesChanged();
 }
 
 void UGridInfo_Editor::SetSensing(bool bNewSensing)
 {
 	bSensing = bNewSensing;
 
-	Dirty();
+	PropertiesChanged();
 }
 

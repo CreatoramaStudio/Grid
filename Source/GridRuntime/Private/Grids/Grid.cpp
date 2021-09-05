@@ -53,6 +53,7 @@ void UGrid::SetVisibility(const bool bNewVisibility)
 	{
 		bVisible = bNewVisibility;
 		GridSubsystem->GetGridPainter()->UpdateGridState(this);
+		OnVisibilityChanged.Broadcast(bVisible);
 	}
 }
 
@@ -68,7 +69,7 @@ int UGrid::GetDistance(const UGrid* Dest) const
 
 bool UGrid::IsEmpty() const
 {
-	return !GridInfo->HitResult.bBlockingHit;
+	return !GridInfo->GetHitResult().bBlockingHit;
 }
 
 FIntVector UGrid::GetCoord() const

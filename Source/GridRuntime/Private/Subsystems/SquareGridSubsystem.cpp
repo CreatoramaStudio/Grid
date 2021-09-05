@@ -214,9 +214,7 @@ USquareGrid* USquareGridSubsystem::CreateGrid(const FIntVector& Coord, const FHi
 	Grid->Coord = Coord;
 	Grid->Height = HitResult.ImpactPoint.Z;
 	Grid->GridInfo = NewObject<UGridInfo>(Grid, GridInfoClass);
-	Grid->GridInfo->HitResult = HitResult;
-	Grid->GridInfo->ParentGrid = Grid;
-	Grid->GridInfo->Guid = FGuid::NewGuid();
+	Grid->GridInfo->Initialize(HitResult,Grid);
 	Grid->GridSubsystem = this;
 	Grid->SetGridSize(GridSize);
 
